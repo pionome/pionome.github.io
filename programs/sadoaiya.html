@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sadoaiya</title>
+        <link rel="icon" type="image/x-icon" href="../assets/eye.ico">
+        <link rel="stylesheet" href="../css/main.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Oswald&display=swap" >
+    </head>
+    <body id="sadoaiya">
+        <section class="Top">
+            <div>
+                <header>
+                    <a href="../index.html" class="button" id="BackButton">Return</a>
+                    <h1>Sadoaiya</h1>
+                    <p>Sadoaiya is a .Net 6.0 program used for editing gmo models,<br>mainly with the goal of importing them into Persona 4 Golden PC</p>
+                    <a href= "https://autode.sk/3FVFKLo" class="button">Download</a>
+                </header>
+            </div>
+        </section>
+        <img src="../assets/pictures/sadoaiyaconfig.jpg" id="sadoaiyaimg">
+        <img src="../assets/pictures/sadoaiyainfo.jpg" id="sadoaiyaimg">
+        <section class="Middle">
+            <h3>Features</h3>
+            <p class="ListStart">Sadoaiya's easily configurable features include:</p>
+            <ul>
+                <li>Applying all changes necessary to make a model work in P4G PC</li>
+                <li>Converting to a text format</li>
+                <li>Importing and extracting AMD files</li>
+                <li>Extracting and importing textures</li>
+                <li>Changing formats of arrays</li>
+            </ul>
+        </section>
+        <section class="Bottom">
+            <h3>Process of Importing a Model</h3>
+            <p  style="color:red;">WARNING: This semi guide does not cover the actual process of<br>getting your models ready, as it focuses only on the making them work in P4G part</p>
+            
+            <p class="ListStart">Preregs:</p>
+            <ul>
+                <li><a href="https://dotnet.microsoft.com/en-us/download/dotnet/6.0">.NET 6.0</a> (necessary in order to run sadoaiya)</li>
+                <li><a href="">Sadoaiya</a> (preconfigured for P4G PC by default)</li>
+                <li><a href="https://cdn.discordapp.com/attachments/925531160392658944/1038502426686259240/PSP_Tools.7z">PSP converter tools</a> (preconfigured for P4G PC)</li>
+            </ul>
+            <p class="ListStart">Guide:</p>
+            <ul>
+                <li>Export your model as FBX (preferably 2009 ascii)</li>
+                <li>Convert your model to gms using gmoconv.exe found in PSP converter tools with <code>gmoconv.exe {yourFBX} -S</code></li>
+                <li>Apply desired changes to the gms file using a text editor</li>
+                <li>Convert your gms to gmo using gmoconv.exe with <code>gmoconv.exe {yourFBX}</code></li>
+                <li>Fix your model for P4G by drag and dropping it on sadoaiya.exe or by using <code>sadoaiya.exe {yourGMO} -A</code> to save it as an amd</li>
+            </ul>
+        </section>
+    </body>
+</html>
