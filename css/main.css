@@ -17,8 +17,9 @@ ul#navbar {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #dddddd;
+    background-color: #262730ff;
     padding-left: 0px;
+    min-height: 24px;
 }
   
 #navbar li {
@@ -29,13 +30,17 @@ ul#navbar {
     display: block;
     padding: 8px;
     text-decoration: none;
-    color: black;
+    color: white;
     font-family: Verdana,sans-serif;
 }
 
 #navbar li a:hover {
     background-color: #555;
     color: white;
+}
+
+#navcur {
+    background-color: #d33f49ff;
 }
 
 a {

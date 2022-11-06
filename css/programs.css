@@ -1,0 +1,68 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {
+    background-color: #101414;
+}
+
+.programs {
+    display: flex;
+    flex-direction: row;
+    margin-left: 6.25%;
+}
+
+
+.program {
+    overflow: hidden;
+    width: 300px;
+    border-radius: 10px;
+    text-align: center;
+    flex-direction: column;
+    display: flex;
+    border-color: gray;
+    border-style: solid;
+    border-width: 1px;
+    padding: 10px;
+}
+
+.program .button {
+    width: 100px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    color: white;
+}
+
+.program h3 {
+    font-size: 30px;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    color:#5095e4;
+}
+
+.program h3:hover {
+    text-decoration: underline;
+}
+
+.program a {
+    text-decoration: none;
+    color: black;
+}
+
+.program p {
+    margin-bottom: 0;
+    margin-top: 0;
+    color: gray;
+}
+
+
+.program-image img {
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    border-radius: 5%;
+}
