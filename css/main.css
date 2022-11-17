@@ -1,7 +1,8 @@
-@charset "utf-8";
-/* CSS Document */
+body {
+    background-color: #101414;
+}
 
-#sadoaiya {
+#program {
     background-color: #e1e5ee;
 }
 
@@ -12,35 +13,30 @@ body {
     display: block;
 }
 
-ul#navbar {
-    list-style-type: none;
+.icons i {
+    /* font-size: 4vw; */
+    color: white;
+}
+
+.icons i:hover {
+    color: gray;
+    
+}
+
+.icons p {
     margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #262730ff;
-    padding-left: 0px;
-    min-height: 24px;
-}
-  
-#navbar li {
-    float: left;
-}
-  
-#navbar li a {
-    display: block;
-    padding: 8px;
-    text-decoration: none;
-    color: white;
-    font-family: Verdana,sans-serif;
-}
-
-#navbar li a:hover {
-    background-color: #555;
+    font-family: 'Oswald', sans-serif;
     color: white;
 }
 
-#navcur {
-    background-color: #d33f49ff;
+.icons {
+    margin: 0;
+    width: 100%;
+    top: 10vh;
+    font-size: 20vh;
+    position: absolute;
+    text-align: center;
+    color: white;
 }
 
 a {
@@ -54,7 +50,7 @@ code {
 
 header {
     text-align: center;
-    background-color: #262730ff;
+    background-color: rgb(53, 54, 67);
 }
 
 header p {
@@ -90,7 +86,7 @@ h1, h2, h3 {
 }
 
 .Top {
-    background-color: #262730ff;
+    background-color: rgb(53, 54, 67);
     color: #77ba99ff;
     padding: 15px;
 }

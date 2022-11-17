@@ -4,15 +4,23 @@
         <title>Sadoaiya</title>
         <link rel="icon" type="image/x-icon" href="../assets/eye.ico">
         <link rel="stylesheet" href="../css/main.css">
+        <link rel="stylesheet" href="../css/navbar.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Oswald&display=swap" >
     </head>
-    <body id="sadoaiya">
+    <body id="program">
+
+        <ul id="navbar">
+            <li><a href="..">Home</a></li>
+            <li><a href="https://gamebanana.com/members/submissions/sublog/1757842">Mods</a></li>
+            <li><a id="navcur2" href="../programs">Programs</a></li>
+            <li><a href="../misc">Misc Programs</a></li>
+        </ul>
+
         <section class="Top">
             <div>
                 <header>
-                    <a href="../programs" class="button" id="BackButton">Return</a>
                     <h1>Sadoaiya</h1>
                     <p>Sadoaiya is a .Net 6.0 program used for editing gmo models,<br>made mainly with the goal of making them work in Persona 4 Golden</p>
                     <a href= "https://autode.sk/3FVFKLo" class="button">Download</a>
@@ -45,6 +53,7 @@
             <p class="ListStart">Guide:</p>
             <ul>
                 <li>Export your model as FBX (preferably 2009 ascii)</li>
+                <li style="color:red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Make sure that your model is rotated 180 degrees on the Z axis!</li>
                 <li>Convert your model to gms using gmoconv.exe found in PSP converter tools with <code>gmoconv.exe {yourFBX} -S</code></li>
                 <li>Apply desired changes to the gms file using a text editor</li>
                 <li>Convert your gms to gmo using gmoconv.exe with <code>gmoconv.exe {yourFBX}</code></li>

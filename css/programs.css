@@ -1,28 +1,28 @@
-@charset "utf-8";
-/* CSS Document */
-
 body {
     background-color: #101414;
 }
 
 .programs {
-    display: flex;
-    flex-direction: row;
-    margin-left: 6.25%;
+    /* display: flex; */
+    /* display: inline-block; */
+    /* flex-direction: row; */
+    margin-left: 75px;
+    /* width: 2vh; */
 }
 
-
 .program {
+    margin-top: 2%;
     overflow: hidden;
     width: 300px;
+    height: 250px;
     border-radius: 10px;
     text-align: center;
-    flex-direction: column;
-    display: flex;
+    display: inline-block;
     border-color: gray;
     border-style: solid;
     border-width: 1px;
     padding: 10px;
+    margin-right: 2%;
 }
 
 .program .button {
@@ -35,32 +35,40 @@ body {
     color: white;
 }
 
-.program h3 {
+#Desc {
+    margin-top: auto;
+}
+
+#Title {
+    margin: 0;
+    margin-top: auto;
     font-size: 30px;
     padding: 0;
-    margin: 0;
     line-height: 1;
     color:#5095e4;
 }
 
-.program h3:hover {
+#Title:hover {
     text-decoration: underline;
 }
 
 .program a {
+    margin-top: auto;
     text-decoration: none;
     color: black;
+    padding-top: auto;
 }
 
 .program p {
+    margin-top: auto;
     margin-bottom: 0;
     margin-top: 0;
     color: gray;
 }
 
-
 .program-image img {
-    max-width: 300px;
+    max-width: 325px;
+    max-height: 100px;
     margin-left: auto;
     margin-right: auto;
     display: block;
