@@ -32,8 +32,8 @@ body {
 .icons {
     margin: 0;
     width: 100%;
-    top: 10vh;
-    font-size: 20vh;
+    top: 25vh;
+    font-size: 10vw;
     position: absolute;
     text-align: center;
     color: white;
@@ -53,9 +53,6 @@ header {
     background-color: rgb(53, 54, 67);
 }
 
-header p {
-    margin: 1;
-}
 
 ul {
     list-style-type: none;
@@ -91,10 +88,6 @@ h1, h2, h3 {
     padding: 15px;
 }
 
-.Top #button {
-    font-size: 25px;
-}
-
 .Middle {
     background-color: #ffecdc;
     color: #2d1207;
@@ -121,12 +114,9 @@ h1, h2, h3 {
     background-color: #77ba99ff;
 }
 
-#BackButton {
-    font-size: 20px;
-    display: inline-block;
-    position: absolute;
-    left: 0;
-    top: 0;
+#bigbutton {
+    font-size: 4vh;
+    padding: 1vh;
 }
 
 #sadoaiyaimg {

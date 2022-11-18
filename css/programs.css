@@ -6,33 +6,36 @@ body {
     /* display: flex; */
     /* display: inline-block; */
     /* flex-direction: row; */
-    margin-left: 75px;
+    margin-left: 7.5%;
     /* width: 2vh; */
 }
 
 .program {
-    margin-top: 2%;
+    margin-top: 1%;
     overflow: hidden;
-    width: 300px;
-    height: 250px;
-    border-radius: 10px;
+    width: 35vh;
+    height: 37.5vh;
+    border-radius: 2vh;
     text-align: center;
     display: inline-block;
     border-color: gray;
     border-style: solid;
-    border-width: 1px;
-    padding: 10px;
+    border-width: 0.1vh;
+    padding: 2vh;
     margin-right: 2%;
 }
 
 .program .button {
-    width: 100px;
+    width: 35%;
     display: block;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 10px;
-    margin-top: 5px;
+    margin-bottom: 5%;
+    margin-top: 2.5%;
     color: white;
+    font-size: 2.5vh;
+    border-radius: 1vh;
+    padding: 0.8vh;
 }
 
 #Desc {
@@ -42,7 +45,8 @@ body {
 #Title {
     margin: 0;
     margin-top: auto;
-    font-size: 30px;
+    /* font-size: 30px; */
+    font-size: 5vh;
     padding: 0;
     line-height: 1;
     color:#5095e4;
@@ -60,6 +64,7 @@ body {
 }
 
 .program p {
+    font-size: 2.5vh;
     margin-top: auto;
     margin-bottom: 0;
     margin-top: 0;
@@ -67,8 +72,10 @@ body {
 }
 
 .program-image img {
-    max-width: 325px;
-    max-height: 100px;
+    max-width: 35vh;
+    max-height: 12.5vh;
+    /* max-width: 325px; */
+    /* max-height: 100px; */
     margin-left: auto;
     margin-right: auto;
     display: block;
