@@ -16,6 +16,7 @@ let ShowBones = false;
 
 let LastMousePos = [0,0];
 
+console.log("Initializing...");
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -24,11 +25,17 @@ document.addEventListener("DOMContentLoaded", function () {
         attribute vec3 aVertexPosition;
         attribute vec3 aVertexNormal;
         attribute vec2 aVertexUV;
+
         uniform mat4 uModelMatrix;
         uniform mat4 uViewMatrix;
         uniform mat4 uProjectionMatrix;
+
         varying highp vec3 vNormal;
         varying highp vec2 vUV;
+
+        uniform int hasSkin;
+        uniform mat4 boneMatrices[4];
+        uniform mat4 inverseBindMatrices[4];
 
         mat3 transpose(mat3 m) {
             return mat3(
@@ -55,7 +62,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         void main(void) {
-            gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aVertexPosition,1.0);
+            //if (hasSkin == 1)
+            //    gl_Position = uProjectionMatrix * uViewMatrix * vec4(aVertexPosition,1.0);
+            //else
+                gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aVertexPosition,1.0);
+            
             gl_PointSize = 5.0;
             mat3 normat = transpose(inverse(mat3(uViewMatrix * uModelMatrix)));
             vNormal = normalize(normat * aVertexNormal);
@@ -154,6 +165,8 @@ document.addEventListener("DOMContentLoaded", function () {
             this.special = gl.getUniformLocation(this.shader, 'special');
             this.boneColor = gl.getUniformLocation(this.shader, 'boneColor');
 
+            this.hasSkin = gl.getUniformLocation(this.shader, 'hasSkin');
+
             
             this.uColor = gl.getUniformLocation(this.shader, 'uColor');
             this.uDiffuse = gl.getUniformLocation(this.shader, 'uDiffuse');
@@ -200,6 +213,8 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Your browser/device does not support WebGL.");
             return;
         }
+        
+        console.log("Compiling shaders...");
 
         const shaderProgram = new ShaderProgram(gl, vsSource, fsSource);
         gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
@@ -235,7 +250,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     for (const clamp of model.clamps)
                     {
                         clamp.Bind(gl, shaderProgram);
-                        clamp.BindBones(gl,shaderProgram);
                         bs = CombineSpheres2(bs, clamp.CalculateBoundingSphere());
                     }
                     for (const texture of model.textures)
@@ -355,7 +369,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (ShowBones)
                     {
                         gl.clear(gl.DEPTH_BUFFER_BIT); //Draw bones above the model
-                        clamp.DrawBones(gl);
+                        clamp.DrawBones(gl, model.animations[0], 0);
                     }
                 }
             }
@@ -365,6 +379,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         function changeBgColor(event)
         {
+            console.log(`Changing background color to: ${BGcolorSelect.value}`);
             const r = parseInt(BGcolorSelect.value.slice(1, 3), 16);
             const g = parseInt(BGcolorSelect.value.slice(3, 5), 16);
             const b = parseInt(BGcolorSelect.value.slice(5, 7), 16);
@@ -374,6 +389,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         function changeBoneColor(event)
         {
+            console.log(`Changing bone color to: ${BoneColorSelect.value}`);
             const r = parseInt(BoneColorSelect.value.slice(1, 3), 16);
             const g = parseInt(BoneColorSelect.value.slice(3, 5), 16);
             const b = parseInt(BoneColorSelect.value.slice(5, 7), 16);
@@ -391,6 +407,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         function ToggleBones(event)
         {
+            console.log(`Toggling bones`);
             ShowBones = event.currentTarget.checked;
             drawScene();
         }
@@ -404,6 +421,7 @@ document.addEventListener("DOMContentLoaded", function () {
         BonesChk.addEventListener("change", ToggleBones);
         canvas.oncontextmenu = function(e) { e.preventDefault(); e.stopPropagation(); };
         drawScene();
+        console.log(`Initialization finished`);
     }
 
     main();

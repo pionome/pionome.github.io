@@ -1,5 +1,45 @@
 mat4 = glMatrix.mat4;
 vec3 = glMatrix.vec3;
+vec4 = glMatrix.vec4;
+quat = glMatrix.quat;
+
+const RmdId = {
+    //Renderware:
+    RwStruct                          : 0x00000001,
+    RwString                          : 0x00000002,
+    RwExtension                       : 0x00000003,
+    RwMaterial                        : 0x00000007,
+    RwMaterialList                    : 0x00000008,
+    RwAtomicSector                    : 0x00000009,
+    RwPlaneSector                     : 0x0000000A,
+    RwWorld                           : 0x0000000B,
+    RwFrameList                       : 0x0000000E,
+    RwGeometry                        : 0x0000000F,
+    RwClump                           : 0x00000010,
+    RwAtomic                          : 0x00000014,
+    RwTextureNative                   : 0x00000015,
+    RwGeometryList                    : 0x0000001A,
+    RwAnimation                       : 0x0000001B,
+    RwTextureDictionary               : 0x00000016,
+    RwUVAnimationDictionary           : 0x0000002B,
+    RwSkin                            : 0x00000116,
+    RwCollisionData                   : 0x0000011D,
+    RwHAnimFrameExtension             : 0x0000011E,
+    RwUserData                        : 0x0000011F,
+    RwMaterialEffects                 : 0x00000120,
+    RwMeshList                        : 0x0000050E,
+    //Atlus:
+    RmdAnimationPlaceholder           : 0xF0F00001,
+    RmdAnimationInstance              : 0xF0F00003,
+    RmdAnimationTerminator            : 0xF0F00004,
+    RmdTransformOverride              : 0xF0F00005,
+    RmdNodeLinkList                   : 0xF0F00006,
+    RmdVisibilityAnim                 : 0xF0F00080,
+    RmdAnimationCount                 : 0xF0F000F0,
+    RmdParticle                       : 0xF0F000E0,
+    RmdParticleAnimation              : 0xF0F000E1,
+}
+
 
 class RmdHeader
 {
@@ -39,6 +79,131 @@ class RmdHeader
     Print()
     {
         console.log(`${this.chunkName} : ${this.chunkSize} @ ${this.offset}`);
+    }
+}
+
+class RmdAnimation
+{
+    Decompress( ushort )
+    {
+        let bits = (ushort & 0x8000) << 16;
+        if (ushort & 0x7fff != 0)
+        {
+            bits |= ((ushort & 0x7800) << 12) + 0x38000000;
+            bits |= (ushort & 0x7ff) << 12;
+        }
+        var buffer = new ArrayBuffer(4);
+        var view = new DataView(buffer);
+        view.setInt32(0, bits, true);
+
+        return view.getFloat32(0, true);
+    }
+    constructor(reader)
+    {
+        this.version = reader.ReadUInt();
+        this.keyFrameType = reader.ReadUInt();
+        this.frameCount = reader.ReadUInt();
+        this.flags = reader.ReadUInt();
+        this.duration = reader.ReadFloat();
+        console.log("Duration: " + reader.Offset);
+        this.keyFrames = [];
+
+        for (let i = 0; i < this.frameCount; i++)
+        {
+            let keyframe;
+            if (this.keyFrameType == 2)
+            {
+                keyframe = {
+                    offset: i * 24,
+                    time: reader.ReadFloat(),
+                    rotation: quat.fromValues(
+                        this.Decompress(reader.ReadUShort()),this.Decompress(reader.ReadUShort()),
+                        this.Decompress(reader.ReadUShort()),this.Decompress(reader.ReadUShort())),
+                    translation: vec3.fromValues(
+                        this.Decompress(reader.ReadUShort()),
+                        this.Decompress(reader.ReadUShort()),
+                        this.Decompress(reader.ReadUShort())),
+                    previousOffset: reader.ReadUInt(),
+                    previousFrame: undefined,
+                    boneIndex: undefined,
+                };
+            }
+            else
+            {
+                keyframe = {
+                    offset: i * 36,
+                    time: reader.ReadFloat(),
+                    rotation: quat.fromValues(
+                        reader.ReadFloat(), reader.ReadFloat(),
+                        reader.ReadFloat(), reader.ReadFloat()),
+                    translation: vec3.fromValues(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat()),
+                    previousOffset: reader.ReadUInt(),
+                    previousFrame: undefined,
+                    boneIndex: undefined,
+                };
+            }
+            if (keyframe.time == 0)
+                keyframe.boneIndex = i;
+            else
+            {
+                for (const frame of this.keyFrames)
+                {
+                    if (keyframe.previousOffsetffset == frame.offset)
+                    {
+                        keyframe.previousFrame = frame;
+                        keyframe.boneIndex = frame.boneIndex;
+                    }
+                }
+            }
+            this.keyFrames.push( keyframe);
+        }
+
+        if (this.keyFrameType == 2)
+        {
+            let Offset = vec3.fromValues(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat());
+            let Scalar = vec3.fromValues(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat());
+
+            for (let i = 0; i < this.frameCount; i++)
+            {
+                vec3.multiply(this.keyFrames[i], this.keyFrames[i], Scalar);
+                vec3.add(this.keyFrames[i], this.keyFrames[i], Offset);
+            }
+        }
+    }
+
+    GetAnimatedBone(time, index)
+    {
+        let foundFrame = undefined;
+        for (const frame in this.keyFrames)
+        {
+            if (frame.time == time && frame.frameIndex == index)
+            {
+                foundFrame = frame;
+            }
+        }
+
+        if (foundFrame != undefined)
+        {
+            return mat4.fromRotationTranslation(mat4.create(), foundFrame.rotation, foundFrame.translation);
+        }
+    }
+}
+
+class RmdAnimationContainer
+{
+    constructor(reader)
+    {
+        reader.SeekCur(64);
+        while(true)
+        {
+            let Child = new RmdHeader(reader);
+            if (Child.ChunkId == RmdId.RwAnimation)
+                this.anim = new RmdAnimation(reader);
+            else if (Child.ChunkId == RmdId.RmdAnimationTerminator)
+                break;
+            else
+                reader.SeekCur(Child.chunkSize);
+        }
     }
 }
 
@@ -105,6 +270,59 @@ class RmdMaterial
                 if (textures[i].Name == this.textureName)
                     textures[i].Use(gl);
             }
+        }
+    }
+}
+
+class RmdSkin
+{
+    constructor(reader, vertexCount)
+    {
+        this.boneCount = reader.ReadByte();
+        this.usedBoneCount = reader.ReadByte();
+        this.maxWeightPerVertex = reader.ReadByte();
+        reader.SeekCur(1);
+        this.usedBoneIndices = reader.ReadBytes(this.usedBoneCount);
+        this.indices = [];
+        this.weights = [];
+        this.skinToBoneMatrices = [];
+
+        for (let i = 0; i < vertexCount; i++)
+        {
+            let ind = [];
+            ind.push(reader.ReadByte());
+            ind.push(reader.ReadByte());
+            ind.push(reader.ReadByte());
+            ind.push(reader.ReadByte());
+            this.indices.push(ind);
+        }
+        for (let i = 0; i < vertexCount; i++)
+        {
+            this.weights.push(reader.ReadFloat());
+            this.weights.push(reader.ReadFloat());
+            this.weights.push(reader.ReadFloat());
+            this.weights.push(reader.ReadFloat());
+        }
+        this.weights = new Float32Array(this.weights);
+        for (let i = 0; i < this.boneCount; i++)
+        {
+            let mat = mat4.create();
+            mat4.set( mat,
+            reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(),
+            reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(),
+            reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(),
+            reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat());
+            this.skinToBoneMatrices.push(mat);
+        }
+        this.boneLimit = reader.ReadInt();
+        this.meshCount = reader.ReadInt();
+        this.rleCount = reader.ReadInt();
+
+        if (this.meshCount > 0)
+        {
+            reader.SeekCur(this.boneCount);
+            reader.SeekCur(2 * this.meshCount);
+            reader.SeekCur(2 * this.rleCount);
         }
     }
 }
@@ -237,14 +455,26 @@ class RmdGeometry
         }
         
         let GeomExt = new RmdHeader(reader);
-        reader.SeekCur(GeomExt.chunkSize);
+        this.hasSkin = false;
+
+        while (reader.Offset < GeomExt.EndOffset)
+        {
+            let CurExt = new RmdHeader(reader);
+            if (CurExt.ChunkId == RmdId.RwSkin)
+            {
+                this.skin = new RmdSkin(reader, this.vertexCount);
+                this.hasSkin = true;
+            }
+            else
+                reader.SeekCur(CurExt.ChunkSize);
+        }
     }
     Bind(gl, shaderProgram)
     {
         this.shaderProgram = shaderProgram;
         this.vertexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.DYNAMIC_DRAW);
 
         this.normalBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.normalBuffer);
@@ -263,7 +493,71 @@ class RmdGeometry
             this.indexBuffers.push(indexBuffer);
         }
     }
+
+    CalculateRigging(gl, curBones, par)
+    {
+        this.animatedVertices = new Float32Array(this.vertices);
+
+        if (this.hasSkin)
+        {
+            for (let i = 0; i < this.vertexCount; i++)
+            {
+                let ind = this.skin.indices[i];
+
+                let weights = [this.skin.weights[i * 4],
+                this.skin.weights[i * 4 + 1],
+                this.skin.weights[i * 4 + 2],
+                this.skin.weights[i * 4 + 3]];
+
+                let vert = vec4.fromValues(this.animatedVertices[i * 3],
+                    this.animatedVertices[i * 3 + 1],
+                    this.animatedVertices[i * 3 + 2],
+                    1);
+                
+                let tempMatrix = mat4.create();
+                let tempVec4 = vec4.create();
+                let resultVert = vec4.fromValues(0,0,0,0);
+
+                for (let j = 0; j < 4; j++)
+                {
+                    if (weights[j] > 0)
+                    {
+                        mat4.identity(tempMatrix);
+                        //mat4.invert(tempMatrix, curBones[ind[j]]);
+                        //mat4.multiply(tempMatrix, tempMatrix, curBones[ind[j]]);
+                        //mat4.multiply(tempMatrix, tempMatrix, this.skin.skinToBoneMatrices[ind[j]]);
+                        //let tmp2 = mat4.create();
+                        //mat4.multiply(tempMatrix, this.skin.skinToBoneMatrices[ind[j]], curBones[ind[j]]);
+                        //mat4.multiply(tempMatrix, tempMatrix, curBones[ind[j]]);
+                        //mat4.multiply(tempMatrix, tempMatrix, curBones[ind[j]]);
+                        //mat4.invert(tmp2, this.skin.skinToBoneMatrices[ind[j]]);
+                        vec4.transformMat4(tempVec4, vert, tempMatrix);
+                        vec4.scale(tempVec4, tempVec4, weights[j]);
+                        vec4.add(resultVert, resultVert, tempVec4);
+                    }
+                }
+
+                this.animatedVertices[i * 3] = resultVert[0];
+                this.animatedVertices[i * 3 + 1] = resultVert[1];
+                this.animatedVertices[i * 3 + 2] = resultVert[2];
+            }
+
+        }
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.animatedVertices, gl.DYNAMIC_DRAW);
+    }
+
+    AnimatedDraw(gl, textures, curBones, par)
+    {
+        this.CalculateRigging(gl, curBones, par);
+        this.Draw(gl, textures);
+    }
+
     Draw(gl, textures) {
+
+        gl.uniform1i(this.shaderProgram.hasSkin, this.hasSkin);
+
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
         gl.vertexAttribPointer(this.shaderProgram.aVertexPosition, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(this.shaderProgram.aVertexPosition);
@@ -516,23 +810,39 @@ class RmdClamp
             geom.Bind(gl, shaderProgram);
         }
     }
+
+    GetCurBones(curFrame, animation)
+    {
+        let curBones = [];
+        for (let i = 0; i < this.frames.count; i++)
+        {
+            if (curFrame != undefined && animation != undefined && animation.anim != undefined)
+            {
+                curBones.push(animation.anim.GetAnimatedBone(curFrame, i));
+            }
+            else
+                curBones.push(this.frames[i].worldTransform(this.frames));
+        }
+        return curBones;
+    }
+
     Draw(gl, textures)
     {
+        let curBones = this.GetCurBones();
         for (const atomic of this.atomics)
         {
             gl.uniformMatrix4fv(this.uModelMatrix, false, this.frames[atomic.frameIndex].worldTransform(this.frames));
-            this.geometries[atomic.geometryIndex].Draw(gl,textures);
+            //this.geometries[atomic.geometryIndex].Draw(gl,textures);
+            this.geometries[atomic.geometryIndex].AnimatedDraw(gl,textures, curBones, this.frames[atomic.frameIndex].worldTransform(this.frames));
         }
     }
 
-    BindBones(gl,shaderProgram)
+    BindBones(gl,shaderProgram, curFrame, animation)
     {
         this.boneVertices = [];
-        for (const frame of this.frames)
+        for (const frame of this.GetCurBones(curFrame, animation))
         {
-            let bone = vec3.create();
-            let trs = frame.worldTransform(this.frames);
-            mat4.getTranslation(bone, trs);
+            let bone = mat4.getTranslation(vec3.create(), frame);
             this.boneVertices.push(bone[0]);
             this.boneVertices.push(bone[1]);
             this.boneVertices.push(bone[2]);
@@ -551,16 +861,18 @@ class RmdClamp
 
         this.boneIndexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.boneIndexBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.boneIndices, gl.STATIC_DRAW);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.boneIndices, gl.DYNAMIC_DRAW);
 
         this.shaderProgram = shaderProgram;
         this.boneVertexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.boneVertexBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.boneVertices), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.boneVertices), gl.DYNAMIC_DRAW);
 
     }
-    DrawBones(gl)
+    DrawBones(gl, curFrame, animation)
     {
+        this.BindBones(gl, this.shaderProgram, curFrame, animation);
+
         gl.uniformMatrix4fv(this.uModelMatrix, false, mat4.create());
         gl.uniform1i(this.shaderProgram.special, 1);
         gl.bindBuffer(gl.ARRAY_BUFFER, this.boneVertexBuffer);
@@ -603,48 +915,12 @@ class RmdAtomic
     }
 }
 
-const RmdId = {
-    //Renderware:
-    RwStruct                          : 0x00000001,
-    RwString                          : 0x00000002,
-    RwExtension                       : 0x00000003,
-    RwMaterial                        : 0x00000007,
-    RwMaterialList                    : 0x00000008,
-    RwAtomicSector                    : 0x00000009,
-    RwPlaneSector                     : 0x0000000A,
-    RwWorld                           : 0x0000000B,
-    RwFrameList                       : 0x0000000E,
-    RwGeometry                        : 0x0000000F,
-    RwClump                           : 0x00000010,
-    RwAtomic                          : 0x00000014,
-    RwTextureNative                   : 0x00000015,
-    RwGeometryList                    : 0x0000001A,
-    RwAnimation                       : 0x0000001B,
-    RwTextureDictionary               : 0x00000016,
-    RwUVAnimationDictionary           : 0x0000002B,
-    RwSkin                            : 0x00000116,
-    RwCollisionData                   : 0x0000011D,
-    RwHAnimFrameExtension             : 0x0000011E,
-    RwUserData                        : 0x0000011F,
-    RwMaterialEffects                 : 0x00000120,
-    RwMeshList                        : 0x0000050E,
-    //Atlus:
-    RmdAnimationPlaceholder           : 0xF0F00001,
-    RmdAnimationInstance              : 0xF0F00003,
-    RmdAnimationTerminator            : 0xF0F00004,
-    RmdTransformOverride              : 0xF0F00005,
-    RmdNodeLinkList                   : 0xF0F00006,
-    RmdVisibilityAnim                 : 0xF0F00080,
-    RmdAnimationCount                 : 0xF0F000F0,
-    RmdParticle                       : 0xF0F000E0,
-    RmdParticleAnimation              : 0xF0F000E1,
-}
-
 function ReadRmd(reader)
 {
     console.log("Loading rmd file...");
     let Clamps = [];
     let Textures = [];
+    let Animations = [];
     while (!reader.EndOfFile())
     {
         let MainHeader = new RmdHeader(reader);
@@ -730,6 +1006,10 @@ function ReadRmd(reader)
                 reader.SeekSet(MainHeader.EndOffset); //Skip any unsupported data like mip maps
                 break;
             }
+            case RmdId.RmdTransformOverride:
+            {
+                Animations.push(new RmdAnimationContainer(reader));
+            }
             case RmdId.RmdParticle: //Particle chunk size is wrong
             {
                 reader.SeekCur(4);
@@ -754,6 +1034,7 @@ function ReadRmd(reader)
     return {
         clamps: Clamps,
         textures: Textures,
+        animations: Animations,
     };
 }
 

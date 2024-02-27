@@ -6,7 +6,6 @@ class DecentReader //An actually useable reader
         this.offset = 0;
         this.textDecoder = new TextDecoder('shift-jis');
     }
-
     ReadInt()
     {
         let output = this.data.getInt32(this.offset, true);
