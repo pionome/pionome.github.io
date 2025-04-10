@@ -1,0 +1,101 @@
+:root {
+    --primary-color: #9c4dff;
+    --accent-color: #b97aff;
+    --accent-color2: #d9b3ff;
+    --bg-color: #faf5ff;
+    --shadow-color: rgba(156, 77, 255, 0.3);
+}
+
+.games-sections-container {
+    display: flex;
+    gap: 60px;
+    margin-bottom: 3rem;
+}
+
+.games-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.game-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid rgba(214, 230, 255, 0.7);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(156, 77, 255, 0.2);
+}
+
+.game-thumbnail {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 3px solid var(--accent-color);
+}
+
+.game-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.game-name {
+    color: var(--primary-color);
+    font-family: 'Fredoka One', cursive;
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+}
+
+.game-description {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+
+.game-jam {
+    color: var(--accent-color);
+    font-weight: 500;
+    font-size: 13px;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px dashed var(--purple-color);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.game-jam i {
+    font-size: 16px;
+}
+
+#loading, #error {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#error {
+    color: #ff4d4d;
+    display: none;
+}
+
+@media (max-width: 1000px) {
+    .games-sections-container {
+        flex-direction: column;
+    }
+}

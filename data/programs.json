@@ -1,0 +1,37 @@
+[
+    {
+        "name": "Sadoaiya",
+        "description": "A program used for editing gmo models, made mainly with the goal of making them work in Persona 4 Golden.",
+        "image": "assets/programs/sadoaiyainfo.jpg",
+        "link": "programs/sadoaiya.html",
+        "downloadLink": "programs/sadoaiya.html#download"
+    },
+    {
+        "name": "P4GFusionEditor",
+        "description": "A program made for editing P4G's persona fusion recipes",
+        "image": "assets/programs/P4GFusionEditorThumbnail.jpg",
+        "link": "https://github.com/Pioziomgames/P4GFusionEditor",
+        "downloadLink": "https://github.com/Pioziomgames/P4GFusionEditor/releases"
+    },
+    {
+        "name": "BamEditor",
+        "description": "A program made for unpacking and repacking Atlus's 3DS bam model archive files",
+        "image": "assets/programs/bameditorinfo.jpg",
+        "link": "https://github.com/Pioziomgames/BamEditor",
+        "downloadLink": "https://github.com/Pioziomgames/BamEditor/releases"
+    },
+    {
+        "name": "AmdTools",
+        "description": "A set of netcore 3.1 tools made for editing Persona 4 Golden's amd files and files contained within them",
+        "image": "assets/programs/amdeditorinfo.jpg",
+        "link": "https://github.com/Pioziomgames/AmdTools",
+        "downloadLink": "https://github.com/Pioziomgames/AmdTools/releases"
+    },
+    {
+        "name": "BedTools",
+        "description": "A set of netcore 3.1 tools made for unpacking and repacking atlus's (pre p5 era) bed and epl files.",
+        "image": "assets/programs/bededitorinfo.jpg",
+        "link": "https://github.com/Pioziomgames/BedTools",
+        "downloadLink": "https://github.com/Pioziomgames/BedTools/releases"
+    }
+]

@@ -1,0 +1,14 @@
+[
+    {
+        "name": "RMD Viewer",
+        "description": "Online Viewer for RMD model files",
+        "thumbnail": "assets/web-apps/rmdViewer.png",
+        "htmlFile": "web-apps/rmdViewer.html"
+    },
+    {
+        "name": "TMX Viewer",
+        "description": "Online Viewer for TMX texture files",
+        "thumbnail": "assets/web-apps/tmxViewer.png",
+        "htmlFile": "web-apps/tmxViewer.html"
+    }
+]

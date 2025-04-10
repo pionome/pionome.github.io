@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMX Viewer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Fredoka+One&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/png" href="../assets/eye.png">
+    <script src="../scripts/apps/reader.js"></script>
+	<link rel="stylesheet" href="../styles/shared.css">
+	<link rel="stylesheet" href="../styles/web-apps.css">
+
+    <style>
+        body {
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                overflow: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="../art.html"><i class="fas fa-paint-brush"></i> Art</a></li>
+            <li><a href="../games.html"><i class="fas fa-gamepad"></i> Games</a></li>
+            <li><a href="../web-apps.html"><i class="fas fa-window-maximize"></i> Web Apps</a></li>
+            <li><a href="../programs.html"><i class="fas fa-code"></i> Programs</a></li>
+            <li><a href="../misc-programs.html"><i class="fas fa-tools"></i> Misc Programs</a></li>
+            <li><a href="../mods.html"><i class="fas fa-cube"></i> Mods</a></li>
+            <li><a href="../repositories.html"><i class="fas fa-code-branch"></i> Repositories</a></li>
+        </ul>
+    </nav>
+    <main>
+        <div id="side">
+            <h1>TMX Viewer</h1>
+            <label>
+                Select a TMX texture to open
+                <input id="textureSelect" type="file" accept=".tmx">
+            </label>
+            <label>
+                Background Color
+                <input id="BGcolorSelect" type="color" value="#f5f9ff">
+            </label>
+			<label class="checkbox-container">
+				<input type="checkbox" id="filteringChk" checked>
+				<label for="filteringChk">Texture Filtering</label>
+			</label>
+            <button id="saveBtn"><i class="fas fa-download"></i> Save as PNG</button>
+            <div id="textureInfo">
+                <p>No texture loaded</p>
+            </div>
+            <div id="controls">
+                <p>Texture Controls:</p>
+                <p>LMB Drag: Pan texture</p>
+                <p>Mouse Wheel: Zoom in/out</p>
+                <p>Double Click: Reset view</p>
+            </div>
+        </div>
+        <div id="appDiv">
+            <canvas id="textureCanvas"></canvas>
+            <div id="zoomInfo">Zoom: 100%</div>
+        </div>
+    </main>
+    <script src="../scripts/shared.js"></script>
+    <script src="../scripts/apps/tmxViewer.js"></script>
+</body>
+</html>

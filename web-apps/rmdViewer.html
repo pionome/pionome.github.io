@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RMD Viewer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Fredoka+One&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/png" href="../assets/eye.png">
+    <script src="../scripts/apps/gl-matrix/gl-matrix.js"></script>
+    <script src="../scripts/apps/reader.js"></script>
+    <script src="../scripts/apps/rmd.js"></script>
+	<link rel="stylesheet" href="../styles/shared.css">
+	<link rel="stylesheet" href="../styles/web-apps.css">
+    <style>
+	body {
+		overflow: hidden;
+	}
+
+	@media (max-width: 768px) {
+		body {
+			overflow: auto;
+		}
+	}
+        
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="../art.html"><i class="fas fa-paint-brush"></i> Art</a></li>
+            <li><a href="../games.html"><i class="fas fa-gamepad"></i> Games</a></li>
+            <li><a href="../web-apps.html"><i class="fas fa-window-maximize"></i> Web Apps</a></li>
+            <li><a href="../programs.html"><i class="fas fa-code"></i> Programs</a></li>
+            <li><a href="../misc-programs.html"><i class="fas fa-tools"></i> Misc Programs</a></li>
+            <li><a href="../mods.html"><i class="fas fa-cube"></i> Mods</a></li>
+            <li><a href="../repositories.html"><i class="fas fa-code-branch"></i> Repositories</a></li>
+        </ul>
+    </nav>
+    <main>
+        <div id="side">
+            <h1>RMD Viewer</h1>
+            <label id="pickerContainer">
+                Select an RMD model to open
+                <input id="modelSelect" type="file" accept=".rmd, .pac">
+            </label>
+            <label>
+                Background Color
+                <input id="BGcolorSelect" type="color" value="#ffffff">
+            </label>
+            <label>
+                Bone Color
+                <input id="BoneColorSelect" type="color" value="#ff6b9d">
+            </label>
+            <div class="checkbox-container">
+                <input type="checkbox" id="BonesChk">
+                <label for="BonesChk">Show Bones</label>
+            </div>
+            <div id="controls">
+                <p>Model Controls:</p>
+                <p>LMB Drag: Rotate model</p>
+                <p>RMB Drag: Move model</p>
+                <p>Mouse Wheel: Zoom in/out</p>
+                <p>Double Click: Reset view</p>
+            </div>
+        </div>
+		<div id="preview-container">
+			<div id="appDiv">
+				<canvas id="webgl-canvas"></canvas>
+			</div>
+			<div id="animation-panel">
+				<div id="animation-controls">
+					<div class="animation-row">
+						<select id="animationSelect" class="animation-dropdown">
+							<option value="-1">No Animation</option>
+						</select>
+						<span id="frameIndicator" class="frame-indicator">Frame: 0/0</span>
+					</div>
+					<div class="animation-row">
+						<button id="playButton" class="anim-btn" disabled>
+							<i class="fas fa-play"></i>
+						</button>
+						<input type="range" id="frameSlider" class="anim-slider" min="0" value="0" disabled>
+					</div>
+				</div>
+			</div>
+		</div>
+    </main>
+    <script src="../scripts/shared.js"></script>
+    <script src="../scripts/apps/rmdViewer.js"></script>
+</body>	
+</html>

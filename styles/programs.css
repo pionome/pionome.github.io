@@ -1,0 +1,103 @@
+:root {
+    --primary-color: #ff7b25;
+    --accent-color: #ff9e4f;
+    --accent-color2: #ffd1b3;
+    --bg-color: #fff9f5;
+    --shadow-color: rgba(255, 123, 37, 0.3);
+}
+
+.program-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid rgba(255, 214, 179, 0.7);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.program-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(255, 123, 37, 0.2);
+}
+
+.program-card > :not(.program-image) {
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+.program-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    border-bottom: 3px solid var(--accent-color);
+}
+
+.program-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.program-card:hover .program-image img {
+    transform: scale(1.05);
+}
+
+.program-name {
+    color: var(--primary-color);
+    font-family: 'Fredoka One', cursive;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+.program-card:hover .program-name {
+    color: var(--accent-color);
+}
+
+.program-description {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.program-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    margin-bottom: 20px;
+}
+
+.program-button:hover {
+    background: white;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 123, 37, 0.3);
+}
+
+#loading, #error {
+    text-align: center;
+    margin: 20px 0;
+}
+
+@media (max-width: 768px) {
+    #programs-grid {
+        grid-template-columns: 1fr;
+    }
+}

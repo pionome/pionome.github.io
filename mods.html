@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pioziomgames - Mods</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/eye.png">
+    <link rel="stylesheet" href="styles/shared.css">
+    <link rel="stylesheet" href="styles/mods.css">
+</head>
+<body>
+    <div class="background" id="background"></div>
+    
+    <nav>
+        <ul class="nav-links">
+            <li><a href="./index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="./art.html"><i class="fas fa-paint-brush"></i> Art</a></li>
+            <li><a href="./games.html"><i class="fas fa-gamepad"></i> Games</a></li>
+            <li><a href="./web-apps.html"><i class="fas fa-window-maximize"></i> Web Apps</a></li>
+            <li><a href="./programs.html"><i class="fas fa-code"></i> Programs</a></li>
+            <li><a href="./misc-programs.html"><i class="fas fa-tools"></i> Misc Programs</a></li>
+            <li><a href="#"><i class="fas fa-cube"></i> Mods</a></li>
+            <li><a href="./repositories.html"><i class="fas fa-code-branch"></i> Repositories</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container ">
+        <div class="header">
+            <h1 class="title">Game Modifications</h1>
+            <p class="subtitle">My collection of video game mods</p>
+        </div>
+        
+        <div id="loading" style="display: none;">Loading mods...</div>
+        <div id="error"></div>
+        
+        <div id="mods-container" class="grid"></div>
+        
+        <div id="controls" style="display: none;">
+            <button id="load-more" class="refresh-btn">Load More Mods</button>
+        </div>
+    </div>
+
+    <script src="scripts/shared.js"></script>
+    <script src="scripts/mods.js"></script>
+</body>
+</html>

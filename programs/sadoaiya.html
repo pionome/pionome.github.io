@@ -1,66 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-<html>
-    <head>
-        <title>Sadoaiya</title>
-        <link rel="icon" type="image/x-icon" href="../assets/eye.ico">
-        <link rel="stylesheet" href="../css/main.css">
-        <link rel="stylesheet" href="../css/navbar.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Oswald&display=swap" >
-    </head>
-    <body id="program">
-        <ul id="navbar">
-            <li><a href="..">Home</a></li>
-            <li><a id="navcur2" href="../programs">Programs</a></li>
-            <li><a href="../apps">Apps</a></li>
-            <li><a href="../misc">Misc Programs</a></li>
-            <li><a href="../games">Games</a></li>
-            <li><a href="https://gamebanana.com/members/submissions/mods/1757842">Mods</a></li>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sadoaiya - GMO Model Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="../assets/eye.png">
+    <link rel="stylesheet" href="../styles/shared.css">
+    <link rel="stylesheet" href="../styles/sadoaiya.css">
+</head>
+<body>
+    <nav class="top-nav">
+        <ul class="nav-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="../art.html"><i class="fas fa-paint-brush"></i> Art</a></li>
+            <li><a href="../games.html"><i class="fas fa-gamepad"></i> Games</a></li>
+            <li><a href="../web-apps.html"><i class="fas fa-window-maximize"></i> Web Apps</a></li>
+            <li><a href="../programs.html"><i class="fas fa-code"></i> Programs</a></li>
+            <li><a href="../misc-programs.html"><i class="fas fa-tools"></i> Misc Programs</a></li>
+            <li><a href="../mods.html"><i class="fas fa-cube"></i> Mods</a></li>
+            <li><a href="../repositories.html"><i class="fas fa-code-branch"></i> Repositories</a></li>
         </ul>
-
-        <section class="Top">
-            <div>
-                <header>
-                    <h1>Sadoaiya</h1>
-                    <p>Sadoaiya is a .Net 6.0 program used for editing gmo models,<br>made mainly with the goal of making them work in Persona 4 Golden</p>
-                    <a href= "https://autode.sk/3FVFKLo" class="button" id="bigbutton">Download</a>
-                </header>
-            </div>
-        </section>
-        <img src="../assets/pictures/sadoaiyaconfig.jpg" id="sadoaiyaimg">
-        <img src="../assets/pictures/sadoaiyainfo.jpg" id="sadoaiyaimg">
-        <section class="Middle">
-            <h3>Features</h3>
+    </nav>
+    <nav class="side-nav">
+        <ul class="nav-links">
+            <li><a href="#"><i class="fas fa-home"></i> Top</a></li>
+            <li><a href="#features"><i class="fas fa-star"></i> Features</a></li>
+            <li><a href="#guide"><i class="fas fa-book"></i> Guide</a></li>
+            <li><a href="#download"><i class="fas fa-download"></i> Download</a></li>
+        </ul>
+    </nav>
+    
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Sadoaiya</h1>
+            <p>A .NET 6.0 tool for editing GMO models, specifically designed to make them work in Persona 4 Golden</p>
+            <a href="../files/sadoaiya.7z" class="button" id="bigbutton"><i class="fas fa-download"></i> Download Now</a>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div class="image-gallery">
+            <img src="../assets/programs/sadoaiyaconfig.jpg" alt="Sadoaiya Configuration File">
+            <img src="../assets/programs/sadoaiyainfo.jpg" alt="Sadoaiya Program Output">
+        </div>
+        
+        <section id="features">
+            <h2>Key Features</h2>
             <p class="ListStart">Sadoaiya's easily configurable features include:</p>
             <ul>
                 <li>Applying all changes necessary to make a model work in P4G PC</li>
-                <li>Converting to a text format</li>
-                <li>Importing and extracting AMD files</li>
-                <li>Extracting and importing textures</li>
-                <li>Changing formats of arrays</li>
+                <li>Converting to a text format for easy editing</li>
+                <li>Importing and extracting AMD files with precision</li>
+                <li>Extracting and importing textures seamlessly</li>
+                <li>Changing formats of arrays to meet specific requirements</li>
+                <li>Heavily customizable with a comprehensive configuration file</li>
             </ul>
         </section>
-        <section class="Bottom">
-            <h3>Process of Importing a Model</h3>
-            <p  style="color:red;">WARNING: This semi guide does not cover the actual process of<br>getting your models ready, as it focuses only on the making them work in P4G part</p>
+        
+        <section id="guide">
+            <h2>Model Import Process</h2>
             
-            <p class="ListStart">Preregs:</p>
+            <div class="warning">
+                <p><i class="fas fa-exclamation-triangle"></i> WARNING: This guide only covers making models work in P4G, not the complete model preparation process.</p>
+            </div>
+            
+            <h3>Prerequisites</h3>
             <ul>
-                <li><a href="https://dotnet.microsoft.com/en-us/download/dotnet/6.0">.NET 6.0</a> (necessary in order to run sadoaiya)</li>
-                <li><a href="">Sadoaiya</a> (preconfigured for P4G PC by default)</li>
-                <li><a href="https://cdn.discordapp.com/attachments/925531160392658944/1038502426686259240/PSP_Tools.7z">PSP converter tools</a> (preconfigured for P4G PC)</li>
+                <li><a href="https://dotnet.microsoft.com/en-us/download/dotnet/6.0">.NET 6.0 Runtime</a> (required to run Sadoaiya)</li>
+                <li><a href="../files/sadoaiya.7z">Sadoaiya</a> (preconfigured for P4G PC by default)</li>
+                <li><a href="../files/PSP_Tools.7z">PSP Converter Tools</a> (preconfigured for P4G PC)</li>
             </ul>
-            <p class="ListStart">Guide:</p>
+            
+            <h3>Step-by-Step Guide</h3>
             <ul>
-                <li>Export your model as FBX (preferably 2009 ascii)</li>
-                <li style="color:red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Make sure that your model is rotated 180 degrees on the Z axis!</li>
-                <li>Convert your model to gms using gmoconv.exe found in PSP converter tools with <code>gmoconv.exe {yourFBX} -S</code></li>
-                <li>Apply desired changes to the gms file using a text editor</li>
-                <li>Convert your gms to gmo using gmoconv.exe with <code>gmoconv.exe {yourFBX}</code></li>
-                <li>Fix your model for P4G by drag and dropping it on sadoaiya.exe or by using <code>sadoaiya.exe {yourGMO} -A</code> to save it as an amd</li>
+                <li>Export your model as FBX (preferably 2009 ASCII format)</li>
+                <li class="warning"><i class="fas fa-exclamation-circle"></i> Ensure your model is rotated 180 degrees on the Z axis!</li>
+                <li>Convert your model to GMS using gmoconv.exe from PSP tools with: <code>gmoconv.exe {yourFBX} -S</code></li>
+                <li>Apply desired changes to the GMS file using a text editor</li>
+                <li>Convert your GMS to GMO using: <code>gmoconv.exe {yourGMS}</code></li>
+                <li>Fix your model for P4G by either:
+                    <ul>
+                        <li>Dragging and dropping it onto sadoaiya.exe</li>
+                        <li>Using command: <code>sadoaiya.exe {yourGMO} -A</code> to save as AMD</li>
+                    </ul>
+                </li>
             </ul>
         </section>
-    </body>
+        
+        <section id="download">
+            <h2>Get Started</h2>
+            <p>Ready to enhance your Persona 4 Golden modding experience?</p>
+            <a href="../files/sadoaiya.7z" class="button"><i class="fas fa-download"></i> Download Sadoaiya</a>
+        </section>
+    </div>
+    <script src="../scripts/shared.js"></script>
+</body>
 </html>

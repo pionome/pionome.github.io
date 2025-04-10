@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pioziomgames - Programs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Fredoka+One&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/png" href="assets/eye.png">
+    <link rel="stylesheet" href="styles/shared.css">
+    <link rel="stylesheet" href="styles/repositories.css">
+</head>
+<body>
+    <div class="background" id="background"></div>
+	<nav>
+		<ul class="nav-links">
+            <li><a href="./index.html"><i class="fas fa-home"></i> Home</a></li>
+			<li><a href="./art.html"><i class="fas fa-paint-brush"></i> Art</a></li>
+			<li><a href="./games.html"><i class="fas fa-gamepad"></i> Games</a></li>
+			<li><a href="./web-apps.html"><i class="fas fa-window-maximize"></i> Web Apps</a></li>
+			<li><a href="./programs.html"><i class="fas fa-code"></i> Programs</a></li>
+			<li><a href="./misc-programs.html"><i class="fas fa-tools"></i> Misc Programs</a></li>
+			<li><a href="./mods.html"><i class="fas fa-cube"></i> Mods</a></li>
+			<li><a href="#"><i class="fas fa-code-branch"></i> Repositories</a></li>
+		</ul>
+	</nav>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">GitHub Repositories</h1>
+            <p class="subtitle">My collection of programming projects</p>
+        </div>
+        
+        <div id="loading" style="display: none;">Loading repositories...</div>
+        <div id="error"></div>
+        
+        <div id="repos-container" class="grid"></div>
+        
+        <div id="controls" style="display: none;">
+            <button id="load-more" class="refresh-btn">Load More Repositories</button>
+        </div>
+    </div>
+
+    <div id="repoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-repo-container">
+                <div class="modal-loading" id="modalLoading">Loading repository details...</div>
+                <div class="modal-repo-header">
+                    <img id="modalRepoAvatar" class="modal-avatar" src="" alt="Profile picture">
+                    <div>
+                        <h2 id="modalRepoName"></h2>
+                        <p id="modalRepoOwner" class="modal-handle"></p>
+                    </div>
+                </div>
+                <div id="modalRepoDescription" class="modal-text"></div>
+                <div class="modal-stats">
+                    <div class="modal-stat">
+                        <i class="fas fa-star"></i>
+                        <span id="modalRepoStars"></span> stars
+                    </div>
+                    <div class="modal-stat">
+                        <i class="fas fa-code-branch"></i>
+                        <span id="modalRepoForks"></span> forks
+                    </div>
+                    <div class="modal-stat">
+                        <i class="fas fa-eye"></i>
+                        <span id="modalRepoWatchers"></span> watchers
+                    </div>
+                    <div class="modal-stat">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span id="modalRepoIssues"></span> open issues
+                    </div>
+                </div>
+                <div class="modal-languages" id="modalRepoLanguages"></div>
+                <div class="modal-buttons">
+                    <a id="modalRepoLink" class="modal-post-link" href="#" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-github"></i> View on GitHub
+                    </a>
+                    <a id="modalRepoWebsite" class="modal-post-link" href="#" target="_blank" rel="noopener noreferrer" style="display: none;">
+                        <i class="fas fa-globe"></i> Visit Website
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="./scripts/shared.js"></script>
+    <script src="./scripts/repositories.js"></script>
+</body>
+</html>

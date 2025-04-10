@@ -1,45 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<html>
-    <head>
-        <title>Games</title>
-        <link rel="icon" type="image/x-icon" href="assets/eye.ico">
-        <link rel="stylesheet" href="css/navbar.css">
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/misc.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Oswald&display=swap">
-    </head>
-
-    <body>
-        <ul id="navbar">
-            <li><a href=".">Home</a></li>
-            <li><a href="./programs">Programs</a></li>
-            <li><a href="./apps">Apps</a></li>
-            <li><a href="./misc">Misc Programs</a></li>
-            <li><a id="navcur" href="./games">Games</a></li>
-            <li><a href="https://gamebanana.com/members/submissions/mods/1757842">Mods</a></li>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pioziomgames - Game Jam Games</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Fredoka+One&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/png" href="assets/eye.png">
+    
+    <link rel="stylesheet" href="styles/shared.css">
+    <link rel="stylesheet" href="styles/games.css">
+</head>
+<body>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="./index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="./art.html"><i class="fas fa-paint-brush"></i> Art</a></li>
+            <li><a href="#"><i class="fas fa-gamepad"></i> Games</a></li>
+            <li><a href="./web-apps.html"><i class="fas fa-window-maximize"></i> Web Apps</a></li>
+            <li><a href="./programs.html"><i class="fas fa-code"></i> Programs</a></li>
+            <li><a href="./misc-programs.html"><i class="fas fa-tools"></i> Misc Programs</a></li>
+            <li><a href="./mods.html"><i class="fas fa-cube"></i> Mods</a></li>
+            <li><a href="./repositories.html"><i class="fas fa-code-branch"></i> Repositories</a></li>
         </ul>
+    </nav>
+    <div class="background" id="background"></div>
 
-        <div>
-            <h2>Games made by Underground Red Production</h2>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Game Jam Games</h1>
+            <p class="subtitle">A collection of games created during game jams</p>
         </div>
-        <div>
-        <iframe frameborder="0" src="https://itch.io/embed/2248799?border_width=0&amp;bg_color=222&amp;fg_color=ffffff&amp;border_color=222"
-        width="550" height="165">
-            <a href="https://pioziomgames.itch.io/chireiden-survivors">
-                Chireiden Survivors by Pioziomgames
-            </a>
-        </iframe>
+
+        <div id="loading">Loading games...</div>
+        <div id="error"></div>
+
+        <div class="games-sections-container">
+            <div class="games-section">
+                <h2 class="section-title">Solo Projects</h2>
+                <div id="games-grid-solo" class="grid"></div>
+            </div>
+
+            <div class="games-section">
+                <h2 class="section-title">Collaborations</h2>
+                <div id="games-grid-collab" class="grid"></div>
+            </div>
         </div>
-        <div>
-            <iframe frameborder="0" src="https://itch.io/embed/2459532?border_width=0&amp;bg_color=222&amp;fg_color=fff&amp;border_color=222"
-            width="550" height="165">
-                <a href="https://pioziomgames.itch.io/we-need-more-fire">
-                    We need more fire! by Pioziomgames
-                </a>
-            </iframe>
-        </div>
-    </body>
+    </div>
+    <script src="./scripts/shared.js"></script>
+    <script src="./scripts/games.js"></script>
+</body>
 </html>

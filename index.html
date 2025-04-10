@@ -1,33 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-<html>
-    <head>
-        <title>Pioziomgames</title>
-        <link rel="icon" type="image/x-icon" href="assets/eye.ico">
-        <link rel="stylesheet" href="css/navbar.css">
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Oswald&display=swap">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.css" integrity="sha512-HHsOC+h3najWR7OKiGZtfhFIEzg5VRIPde0kB0bG2QRidTQqf+sbfcxCTB16AcFB93xMjnBIKE29/MjdzXE+qw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> 
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pioziomgames</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Fredoka+One&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/png" href="assets/eye.png">
+    <link rel="stylesheet" href="styles/shared.css">
+    <link rel="stylesheet" href="styles/home.css">
+</head>
+<body>
+    <div class="background" id="background"></div>
     
-    <body>
-        <ul id="navbar">
-            <li><a id="navcur" href=".">Home</a></li>
-            <li><a href="./programs">Programs</a></li>
-            <li><a href="./apps">Apps</a></li>
-            <li><a href="./misc">Misc Programs</a></li>
-            <li><a href="./games">Games</a></li>
-            <li><a href="https://gamebanana.com/members/submissions/mods/1757842">Mods</a></li>
-        </ul>
-    </body>
+    <nav>
+		<ul class="nav-links">
+			<li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+			<li><a href="./art.html"><i class="fas fa-paint-brush"></i> Art</a></li>
+			<li><a href="./games.html"><i class="fas fa-gamepad"></i> Games</a></li>
+			<li><a href="./web-apps.html"><i class="fas fa-window-maximize"></i> Web Apps</a></li>
+			<li><a href="./programs.html"><i class="fas fa-code"></i> Programs</a></li>
+			<li><a href="./misc-programs.html"><i class="fas fa-tools"></i> Misc Programs</a></li>
+			<li><a href="./mods.html"><i class="fas fa-cube"></i> Mods</a></li>
+			<li><a href="./repositories.html"><i class="fas fa-code-branch"></i> Repositories</a></li>
+		</ul>
+	</nav>
     
-    <div class="icons">
-        <p>Pioziomgames</p>
-        <a href="https://www.youtube.com/c/pioziomgame" class="icon-youtube"><i class="fab fa-youtube"></i></a>
-        <a href="https://twitter.com/pioziomgames" class="icon-twitter"><i class="fab fa-twitter"></i></a>
-        <a href="https://github.com/Pioziomgames/" class="icon-github"><i class="fab fa-github"></i></a>
-        <a href="https://pioziomgames.itch.io" class="icon-itch-io"><i class="fab fa-itch-io"></i></a>
+    <div class="container">
+        <div class="logo-container">
+            <h1 class="logo"><span class="logo-pio">Pio</span>ziomgames</h1>
+            <p class="subtitle">Hobby artist, programmer and video game modder.</p>
+        </div>
+        
+        <div class="social-icons">
+            <a href="https://twitter.com/PioArtStuff" class="social-icon twitter" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="https://pioziomgames.bsky.social" class="social-icon bluesky" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-bluesky"></i>
+            </a>
+            <a href="https://pixiv.net/users/46385589" class="social-icon pixiv" target="_blank" rel="noopener noreferrer">
+                <i class="fas fab fa-pixiv"></i>
+            </a>
+            <a href="https://github.com/Pioziomgames" class="social-icon github" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="https://pioziomgames.itch.io" class="social-icon itchio" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-itch-io"></i>
+            </a>
+            <a href="https://www.youtube.com/c/pioziomgame" class="social-icon youtube" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-youtube"></i>
+            </a>
+        </div>
     </div>
+    
+    <script src="scripts/shared.js" defer></script>
+</body>
 </html>

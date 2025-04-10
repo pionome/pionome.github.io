@@ -1,0 +1,22 @@
+[
+    {
+        "name": "DelChunk",
+        "description": "Deletes a specific chunk type from all gmo and amd files in a directory",
+        "fileName": "files/misc/DelChunk.7z"
+    },
+    {
+        "name": "GmoAnimOffset",
+        "description": "Offsets a specified gmo animation by a specified amount of frames",
+        "fileName": "files/misc/GmoAnimOffset.7z"
+    },
+    {
+        "name": "MergeGmoMotions",
+        "description": "Imports gmo and gms/mds motions from a specified folder to a selected input file",
+        "fileName": "files/misc/MergeGmoMotions.7z"
+    },
+    {
+        "name": "GmoReplaceModel",
+        "description": "Replaces model data inside of a gmo model while leaving other data intact",
+        "fileName": "files/misc/GmoReplaceModel.7z"
+    }
+]

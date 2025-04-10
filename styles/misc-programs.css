@@ -1,0 +1,112 @@
+:root {
+    --primary-color: #00a896;
+    --accent-color: #02c39a;
+    --accent-color2: #b2f7ef;
+    --bg-color: #f0fdfa;
+    --shadow-color: rgba(2, 195, 154, 0.1);
+}
+
+.container {
+    max-width: 1000px;
+}
+
+.misc-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    animation: slideUpFadeIn 1s ease-out both;
+}
+
+.subtitle {
+    margin-bottom: 0.5rem;
+}
+
+.misc-note {
+    font-size: 1rem;
+    color: var(--primary-color);
+    font-style: italic;
+    margin-bottom: 2rem;
+}
+
+#misc-programs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.misc-program {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid rgba(178, 247, 239, 0.7);
+}
+
+.misc-program:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 168, 150, 0.2);
+}
+
+.misc-program-name {
+    color: var(--primary-color);
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
+}
+
+.misc-program:hover .misc-program-name {
+    color: var(--accent-color);
+}
+
+.misc-program-description {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.misc-program-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.misc-program-button:hover {
+    background: white;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 168, 150, 0.3);
+}
+
+#loading, #error {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#error {
+    color: #ff4d4d;
+    display: none;
+}
+
+@keyframes slideUpFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem;
+    }
+    
+    .misc-program {
+        padding: 20px;
+    }
+}
