@@ -196,3 +196,16 @@ nav {
     color: #ff4d4d;
     display: none;
 }
+
+@media (max-width: 768px) {
+    nav { padding: 1rem; }
+    .nav-links { gap: 0.8rem; }
+    .nav-links a { font-size: 0.9rem; padding: 0.6rem 0.8rem; }
+    .nav-links a i { margin-right: 5px; }
+}
+
+@media (max-width: 480px) {
+    .nav-links { gap: 0.5rem; }
+    .nav-links a { padding: 0.5rem; font-size: 0.8rem; }
+    .nav-links a i { display: none; }
+}
