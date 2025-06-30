@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalRepoLink = document.getElementById('modalRepoLink');
     const modalRepoWebsite = document.getElementById('modalRepoWebsite');
     
-    const username = 'Pioziomgames';
+    const username = 'pionome';
     let currentPage = 1;
     let repos = [];
     let languagesCache = {};

@@ -1,32 +1,42 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const gallery = document.getElementById('gallery');
+    const artContainer = document.getElementById('art-container');
     const loading = document.getElementById('loading');
     const errorDiv = document.getElementById('error');
     const loadMoreBtn = document.getElementById('load-more');
     const controls = document.getElementById('controls');
     const modalLoading = document.getElementById('modalLoading');
     
-    const modal = document.getElementById('imageModal');
-    const modalImage = document.getElementById('modalImage');
-    const modalCounter = document.getElementById('modalCounter');
-    const modalText = document.getElementById('modalText');
-    const modalDate = document.getElementById('modalDate');
-    const modalLikes = document.getElementById('modalLikes');
-    const modalReposts = document.getElementById('modalReposts');
-    const modalImageCount = document.getElementById('modalImageCount');
-    const modalPostLink = document.getElementById('modalPostLink');
-    const modalPrevBtn = document.getElementById('modalPrevBtn');
-    const modalNextBtn = document.getElementById('modalNextBtn');
+    const modal = document.getElementById('artModal');
+    const modalArtTitle = document.getElementById('modalArtTitle');
+    const modalArtImage = document.getElementById('modalArtImage');
+    const modalArtDescription = document.getElementById('modalArtDescription');
+    const modalArtDate = document.getElementById('modalArtDate');
+    const modalArtLikes = document.getElementById('modalArtLikes');
+    const modalArtViews = document.getElementById('modalArtViews');
+    const modalArtBookmarks = document.getElementById('modalArtBookmarks');
+    const modalArtTags = document.getElementById('modalArtTags');
+    const modalArtLink = document.getElementById('modalArtLink');
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    const nextPageBtn = document.getElementById('nextPageBtn');
+    const pageIndicator = document.getElementById('pageIndicator');
+    const closeModalBtn = document.querySelector('.close-modal');
+    const modalArtist = document.getElementById('modalArtist');
+    const modalArtistAvatar = document.getElementById('modalArtistAvatar');
+    const modalArtistName = document.getElementById('modalArtistName');
     
-    let cursor = null;
-    const handle = 'pioziomgames.bsky.social';
-    let currentModalData = null;
-    let profileData = null;
+    const userId = '46385589';
+    const proxy = 'https://pixivnow-eight.vercel.app';
+    const profileUrl = `${proxy}/ajax/user/${userId}/profile/all`;
+    const userProfileUrl = `${proxy}/ajax/user/${userId}?full=1`;
+    let allIllustIds = [];
+    let currentPage = 1;
+    const pageSize = 15;
+    let currentArtwork = null;
+    let currentPageIndex = 0;
+    let userProfile = null;
     
-    loadMoreBtn.addEventListener('click', fetchImages);
-    modalPrevBtn.addEventListener('click', () => navigateModal(-1));
-    modalNextBtn.addEventListener('click', () => navigateModal(1));
-    
+    loadMoreBtn.addEventListener('click', fetchArtwork);
+    closeModalBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', function(e) {
         if (e.target === modal) {
             closeModal();
@@ -34,289 +44,276 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     document.addEventListener('keydown', function(e) {
-        if (modal.style.display === 'block') {
-            if (e.key === 'Escape') closeModal();
-            if (e.key === 'ArrowLeft') navigateModal(-1);
-            if (e.key === 'ArrowRight') navigateModal(1);
+        if (modal.style.display === 'block' && e.key === 'Escape') {
+            closeModal();
         }
     });
     
-    fetchProfileData();
-    fetchImages();
+    prevPageBtn.addEventListener('click', () => navigatePage(-1));
+    nextPageBtn.addEventListener('click', () => navigatePage(1));
     
-    async function fetchProfileData() {
-        try {
-            const response = await fetch(`https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor=${encodeURIComponent(handle)}`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch profile data');
-            }
-            profileData = await response.json();
-        } catch (error) {
-            console.error('Error fetching profile:', error);
-        }
+    fetchProfile();
+    
+    function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
     }
-
-    async function fetchImages() {
-        loading.style.display = 'block';
-        errorDiv.style.display = 'none';
-        
+    
+    function fixUrl(ogUrl)
+    {
+        return ogUrl.replace('https://i.pximg.net', `${proxy}/~`).replace('https://s.pximg.net', `${proxy}/~`)
+    }
+    
+    
+    async function fetchProfile() {
         try {
-            const apiUrl = `https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(handle)}&limit=50${cursor ? `&cursor=${cursor}` : ''}`;
-            const response = await fetch(apiUrl);
+            loading.style.display = 'block';
+            errorDiv.style.display = 'none';
+            
+            const userRes = await fetch(userProfileUrl);
+            if (!userRes.ok) throw new Error('Failed to fetch user profile');
+            userProfile = await userRes.json();
+            
+            if (!userProfile || !userProfile.name) {
+                throw new Error('Invalid user profile data');
+            }
+            
+            userProfile.imageBig = fixUrl(userProfile.imageBig);
+            
+            const response = await fetch(profileUrl);
             
             if (!response.ok) {
-                throw new Error(`API request failed with status ${response.status}`);
+                throw new Error(`Failed to fetch profile: ${response.status}`);
             }
             
             const data = await response.json();
             
-            if (!data.feed || data.feed.length === 0) {
-                showError('No posts found');
+            if (!data.illusts) {
+                throw new Error('Invalid profile data format');
+            }
+            
+            allIllustIds = Object.keys(data.illusts).map(id => id);
+            
+            if (allIllustIds.length === 0) {
+                showError('No artwork found in profile');
                 return;
             }
             
-            const postsWithImages = data.feed.filter(post => {
-                if (post.reply) return false;
-                const postText = post.post.record.text || '';
-                if (!postText.toLowerCase().includes('#東方project')) return false;
-                return post.post.embed?.images || post.post.embed?.media?.images;
-            });
+            allIllustIds.reverse();
             
-            if (postsWithImages.length === 0 && gallery.innerHTML === '') {
-                showError('No post with images matching criteria found');
-                return;
-            }
-            
-            postsWithImages.forEach(post => createPostCard(post));
-            
-            cursor = data.cursor;
-            controls.style.display = cursor ? 'flex' : 'none';
+            fetchArtwork();
             
         } catch (error) {
-            showError(`Error fetching images: ${error.message}`);
+            showError(`Error fetching profile: ${error.message}`);
+            console.error(error);
+        }
+    }
+    
+    async function fetchArtwork() {
+        try {
+            loading.style.display = 'block';
+            errorDiv.style.display = 'none';
+            
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = startIndex + pageSize;
+            const currentIds = allIllustIds.slice(startIndex, endIndex);
+            
+            if (currentIds.length === 0) {
+                controls.style.display = 'none';
+                return;
+            }
+            
+            const idsParam = currentIds.map(id => `ids[]=${id}`).join('&');
+            const detailsUrl = `${proxy}/ajax/user/${userId}/illusts?${idsParam}`;
+            
+            const response = await fetch(detailsUrl);
+            
+            if (!response.ok) {
+                throw new Error(`Failed to fetch artwork: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (!data) {
+                throw new Error('Invalid artwork data format');
+            }
+            dataValues = Object.values(data)
+            displayArtwork(dataValues);
+            
+            currentPage++;
+            if (dataValues.length < pageSize)
+                controls.style.display = 'none';
+            else
+                controls.style.display = 'flex';
+            
+        } catch (error) {
+            showError(`Error fetching artwork: ${error.message}`);
             console.error(error);
         } finally {
             loading.style.display = 'none';
         }
     }
     
-    function createPostCard(post) {
-        const images = post.post.embed?.images || post.post.embed?.media?.images || [];
-        if (images.length === 0) return;
-        
-        const postDate = new Date(post.post.record.createdAt);
-        const formattedDate = postDate.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric' 
+    function displayArtwork(artworkData) {
+        Object.values(artworkData).reverse().forEach(art => {
+            if (!art) return;
+            
+            const imageUrl = fixUrl(art.url);
+            
+            const card = document.createElement('div');
+            card.className = 'art-card';
+            card.dataset.artId = art.id;
+            
+            card.innerHTML = `
+                <div class="art-thumbnail-container">
+                    <img src="${imageUrl}" class="art-thumbnail" alt="${art.title}">
+                </div>
+                <div class="art-content">
+                    <div class="art-header">
+                        <h3 class="art-title">${art.title}</h3>
+                        <div class="art-artist">
+                        ${userProfile ? `<img src="${userProfile.imageBig}" class="artist-avatar" alt="${userProfile.name}">` : ''}
+                        <span class="artist-name">${userProfile ? userProfile.name : 'Pio'}</span>
+                    </div>
+                    </div>
+                    
+                    <div class="art-date">
+                        <span><i class="fas fa-calendar-alt"></i> ${formatDate(art.createDate)}</span>
+                        <span><i class="fas fa-images"></i> ${art.pageCount}</span>
+                    </div>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => openModal(art));
+            artContainer.appendChild(card);
         });
-        
-        const postUri = post.post.uri;
-        const postUrl = `https://bsky.app/profile/${handle}/post/${postUri.split('/').pop()}`;
-        
-        const card = document.createElement('div');
-        card.className = 'post-card';
-        card.dataset.postUri = postUri;
-        card.dataset.postUrl = postUrl;
-        card.dataset.postText = post.post.record.text || '';
-        card.dataset.postDate = formattedDate;
-        card.dataset.postLikes = post.post.likeCount || 0;
-        card.dataset.postReposts = post.post.repostCount || 0;
-        
-        card.dataset.images = JSON.stringify(images.map(img => ({
-            thumb: img.thumb.replace('jpeg', 'webp'),
-            fullsize: img.fullsize.replace('jpeg', 'webp'),
-            alt: img.alt || 'No description'
-        })));
-        
-        const imageContainer = document.createElement('div');
-        imageContainer.className = 'image-container';
-        
-        const firstImage = images[0];
-        const firstImgUrl = firstImage.thumb.replace('jpeg', 'webp');
-        
-        const imgElement = document.createElement('img');
-        imgElement.src = firstImgUrl;
-        imgElement.alt = firstImage.alt || 'No description';
-        
-        imageContainer.appendChild(imgElement);
-        
-        if (images.length > 1) {
-            const counter = document.createElement('div');
-            counter.className = 'image-counter';
-            counter.textContent = `1/${images.length}`;
-            imageContainer.appendChild(counter);
-            
-            const navDiv = document.createElement('div');
-            navDiv.className = 'image-nav';
-            
-            const prevBtn = document.createElement('button');
-            prevBtn.className = 'nav-btn';
-            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
-            prevBtn.style.display = 'none';
-            prevBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                navigateCardImage(-1, card);
-            });
-            
-            const nextBtn = document.createElement('button');
-            nextBtn.className = 'nav-btn';
-            nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
-            nextBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                navigateCardImage(1, card);
-            });
-            
-            navDiv.appendChild(prevBtn);
-            navDiv.appendChild(nextBtn);
-            imageContainer.appendChild(navDiv);
-            
-            card.dataset.currentIndex = '0';
-        }
-        
-        card.addEventListener('click', function() {
-            openModal(card);
-        });
-        
-        card.appendChild(imageContainer);
-        
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'image-info';
-        infoDiv.innerHTML = `
-            <p>${truncateText(post.post.record.text, 150)}</p>
-            <div class="post-stats">
-                <span><i class="far fa-calendar"></i> ${formattedDate}</span>
-                <span><i class="far fa-heart"></i> ${post.post.likeCount || 0}</span>
-                <span><i class="fas fa-retweet"></i> ${post.post.repostCount || 0}</span>
-                <span><i class="far fa-images"></i> ${images.length}</span>
-            </div>
-        `;
-        card.appendChild(infoDiv);
-        
-        gallery.appendChild(card);
     }
     
-    function openModal(card) {
-        modalImage.src = '';
-        modalImage.classList.add('loading');
+    async function openModal(art) {
         modalLoading.style.display = 'block';
-        
-        const images = JSON.parse(card.dataset.images);
-        currentModalData = {
-            images: images,
-            currentIndex: 0,
-            postText: card.dataset.postText,
-            postDate: card.dataset.postDate,
-            postLikes: card.dataset.postLikes,
-            postReposts: card.dataset.postReposts,
-            postUrl: card.dataset.postUrl,
-            imageCount: images.length
-        };
-        
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
         
-        updateModalProfileInfo();
-        loadModalImage(0);
+        try {
+            if (userProfile) {
+                modalArtistAvatar.src = userProfile.imageBig;
+                modalArtistAvatar.alt = userProfile.name;
+                modalArtistName.textContent = userProfile.name;
+                let targetUrl = `https://pixiv.net/users/${userProfile.userId}`;
+                modalArtist.setAttribute("role", "link");
+                modalArtist.setAttribute("tabindex", "0");
+                modalArtist.style.cursor = "pointer";
+                modalArtist.addEventListener("click", () => {
+                    window.location.href = targetUrl;
+                });
+
+                modalArtist.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        window.location.href = targetUrl;
+                    }
+                });
+            }
+            
+            const response = await fetch(`${proxy}/ajax/illust/${art.id}`);
+            if (!response.ok) throw new Error(`Failed to fetch artwork details: ${response.status}`);
+            
+            const fullArt = await response.json();
+            if (!fullArt) throw new Error('Invalid artwork details');
+            
+            console.log(fullArt);
+
+            currentArtwork = fullArt;
+            currentPageIndex = 0;
+            
+            modalArtTitle.textContent = fullArt.title;
+            modalArtDate.textContent = formatDate(fullArt.createDate);
+            modalArtLikes.textContent = fullArt.likeCount;
+            modalArtViews.textContent = fullArt.viewCount;
+            modalArtBookmarks.textContent = fullArt.bookmarkCount;
+            modalArtLink.href = `https://www.pixiv.net/artworks/${fullArt.id}`;
+            
+            if (fullArt.description) {
+                modalArtDescription.innerHTML = fullArt.description;
+                modalArtDescription.classList.remove('empty-description');
+            } else {
+                modalArtDescription.textContent = 'No description available';
+                modalArtDescription.classList.add('empty-description');
+            }
+            
+            modalArtTags.innerHTML = '';
+            if (fullArt.tags && fullArt.tags.tags) {
+                fullArt.tags.tags.forEach(tag => {
+                    const tagEl = document.createElement('div');
+                    if (tag.translation)
+                        tagEl.title = `${tag.translation.en} (${tag.romaji})`;
+                    else if (tag.romaji)
+                        tagEl.title = `(${tag.romaji})`;
+                    tagEl.className = 'tag-modal';
+                    tagEl.textContent = tag.tag;
+                    modalArtTags.appendChild(tagEl);
+                });
+            }
+            
+            loadImageForPage(0);
+        } catch (error) {
+            console.error('Error loading artwork details:', error);
+            modalArtDescription.textContent = 'Failed to load artwork details';
+        }
     }
     
-    function updateModalProfileInfo() {
-        const profileInfo = document.createElement('div');
-        profileInfo.className = 'modal-user-info';
+    function loadImageForPage(pageIndex) {
+        if (!currentArtwork || pageIndex < 0 || pageIndex >= currentArtwork.pageCount) return;
         
-        if (profileData) {
-            profileInfo.innerHTML = `
-                <img src="${profileData.avatar}" class="modal-avatar" alt="Profile picture">
-                <div>
-                    <div class="modal-username">${profileData.displayName || handle.split('.')[0]}</div>
-                    <div class="modal-handle">@${handle}</div>
-                </div>
-            `;
-        } else {
-            profileInfo.innerHTML = `
-                <img class="modal-avatar" alt="Profile picture">
-                <div>
-                    <div class="modal-username">${handle.split('.')[0]}</div>
-                    <div class="modal-handle">@${handle}</div>
-                </div>
-            `;
-        }
-        
-        const modalInfo = document.querySelector('.modal-info');
-        const existingProfile = modalInfo.querySelector('.modal-user-info');
-        if (existingProfile) {
-            modalInfo.replaceChild(profileInfo, existingProfile);
-        } else {
-            modalInfo.insertBefore(profileInfo, modalInfo.firstChild);
-        }
-    }
-    
-    function loadModalImage(index) {
+        currentPageIndex = pageIndex;
         modalLoading.style.display = 'block';
-        modalImage.classList.add('loading');
         
-        const image = currentModalData.images[index];
-        const img = new Image();
-        img.onload = function() {
-            modalImage.src = this.src;
-            modalImage.alt = image.alt;
-            modalImage.classList.remove('loading');
+        let imageUrl;
+        if (currentArtwork.pageCount > 1) {
+            const baseUrl = currentArtwork.urls.regular;
+            imageUrl = baseUrl.replace('_p0', `_p${pageIndex}`);
+        } else {
+            imageUrl = currentArtwork.urls.regular;
+        }
+        
+        imageUrl = fixUrl(imageUrl);
+        
+        modalArtImage.src = imageUrl;	
+        modalArtImage.onload = () => {
             modalLoading.style.display = 'none';
-            updateModalInfo();
+            updatePageNavigation();
         };
-        img.src = image.fullsize;
         
-        currentModalData.currentIndex = index;
-        updateModalInfo();
+        modalArtImage.onerror = () => {
+            modalLoading.style.display = 'none';
+            updatePageNavigation();
+        };
     }
     
-    function navigateModal(direction) {
-        const newIndex = currentModalData.currentIndex + direction;
-        if (newIndex < 0 || newIndex >= currentModalData.images.length) return;
-        loadModalImage(newIndex);
+    function updatePageNavigation() {
+        if (!currentArtwork) return;
+        
+        pageIndicator.textContent = `${currentPageIndex + 1}/${currentArtwork.pageCount}`;
+        
+        prevPageBtn.disabled = currentPageIndex <= 0;
+        nextPageBtn.disabled = currentPageIndex >= currentArtwork.pageCount - 1;
+    }
+    
+    function navigatePage(direction) {
+        const newPage = currentPageIndex + direction;
+        if (newPage >= 0 && newPage < currentArtwork.pageCount) {
+            loadImageForPage(newPage);
+        }
     }
     
     function closeModal() {
+        modalArtImage.src = '';
         modal.style.display = 'none';
         document.body.style.overflow = 'auto';
+        currentArtwork = null;
     }
     
-    function updateModalInfo() {
-        modalCounter.textContent = `${currentModalData.currentIndex + 1}/${currentModalData.images.length}`;
-        modalText.textContent = currentModalData.postText;
-        modalDate.textContent = currentModalData.postDate;
-        modalLikes.textContent = currentModalData.postLikes;
-        modalReposts.textContent = currentModalData.postReposts;
-        modalImageCount.textContent = currentModalData.imageCount;
-        modalPostLink.href = currentModalData.postUrl;
-        
-        modalPrevBtn.classList.toggle('hidden', currentModalData.currentIndex === 0);
-        modalNextBtn.classList.toggle('hidden', currentModalData.currentIndex === currentModalData.images.length - 1);
-    }
-    
-    function navigateCardImage(direction, card) {
-        const images = JSON.parse(card.dataset.images);
-        let currentIndex = parseInt(card.dataset.currentIndex);
-        const newIndex = currentIndex + direction;
-        
-        if (newIndex < 0 || newIndex >= images.length) return;
-        
-        const imageContainer = card.querySelector('.image-container');
-        const imgElement = imageContainer.querySelector('img');
-        imgElement.src = images[newIndex].thumb;
-        imgElement.alt = images[newIndex].alt;
-        
-        const counter = imageContainer.querySelector('.image-counter');
-        if (counter) {
-            counter.textContent = `${newIndex + 1}/${images.length}`;
-        }
-        
-        const prevBtn = imageContainer.querySelector('.nav-btn:first-child');
-        const nextBtn = imageContainer.querySelector('.nav-btn:last-child');
-        
-        prevBtn.style.display = newIndex === 0 ? 'none' : 'flex';
-        nextBtn.style.display = newIndex === images.length - 1 ? 'none' : 'flex';
-        
-        card.dataset.currentIndex = newIndex;
+    function showError(message) {
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
     }
 });

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pioziomgames - Art</title>
+    <title>Pio - Art</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="styles/art.css">
 </head>
 <body>
-    <div class="background" id="background"></div>
 	<nav>
 		<ul class="nav-links">
             <li><a href="./index.html"><i class="fas fa-home"></i> Home</a></li>
@@ -26,57 +25,77 @@
 			<li><a href="./repositories.html"><i class="fas fa-code-branch"></i> Repositories</a></li>
 		</ul>
 	</nav>
+    <div class="background" id="background"></div>
     
     <div class="container">
         <div class="header">
-            <h1 class="title">Touhou Art Gallery</h1>
-            <p class="subtitle">My collection of Touhou Project fan art</p>
+            <h1 class="title">Art Gallery</h1>
+            <p class="subtitle">Latest Illustrations</p>
         </div>
         
-        <div id="loading" style="display: none;">Loading gallery...</div>
+        <div id="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading artwork...</p>
+        </div>
         <div id="error"></div>
         
-        <div id="gallery" class="grid"></div>
+        <div id="art-container" class="grid"></div>
         
-        <div id="controls" style="display: none;">
-            <button id="load-more" class="refresh-btn">Load More Posts</button>
+        <div id="controls" style="display: none; text-align: center;">
+            <button id="load-more" class="refresh-btn">Load More Artwork</button>
         </div>
     </div>
 
-    <div id="imageModal" class="modal">
+    <div id="artModal" class="modal">
+        <span class="close-modal">&times;</span>
         <div class="modal-content">
-            <div class="modal-image-container">
-                <div class="modal-loading" id="modalLoading">Loading image...</div>
-                <div class="modal-nav">
-                    <button class="modal-nav-btn" id="modalPrevBtn"><i class="fas fa-chevron-left"></i></button>
-                    <button class="modal-nav-btn" id="modalNextBtn"><i class="fas fa-chevron-right"></i></button>
+            <div class="modal-art-container">
+                <div class="modal-loading" id="modalLoading">Loading artwork details...</div>
+                <div class="modal-art-header">
+                    <h2 class="modal-art-title" id="modalArtTitle"></h2>
+                    <div class="modal-artist" id="modalArtist">
+                        <img id="modalArtistAvatar" class="modal-artist-avatar" src="" alt="Avatar">
+                        <span id="modalArtistName"></span>
+                    </div>
                 </div>
-                <img id="modalImage" class="modal-image" src="" alt="">
-                <div class="image-counter" id="modalCounter"></div>
-            </div>
-            <div class="modal-info">
-                <div id="modalText" class="modal-text"></div>
+                
+                <div class="modal-image-container">
+                    <div class="page-indicator" id="pageIndicator">1/1</div>
+                    <img id="modalArtImage" class="modal-art-image" src="" alt="Artwork">
+                    <div class="page-navigation">
+                        <button id="prevPageBtn" class="page-btn" disabled>&lt;</button>
+                        <button id="nextPageBtn" class="page-btn" disabled>&gt;</button>
+                    </div>
+                </div>
+                
+                <div class="modal-text" id="modalArtDescription"></div>
+                
                 <div class="modal-stats">
                     <div class="modal-stat">
-                        <i class="far fa-calendar"></i>
-                        <span id="modalDate"></span>
+                        <i class="fas fa-calendar-alt"></i>
+                        <span id="modalArtDate"></span>
                     </div>
                     <div class="modal-stat">
-                        <i class="far fa-heart"></i>
-                        <span id="modalLikes"></span> likes
+                        <i class="fas fa-heart"></i>
+                        <span id="modalArtLikes"></span> likes
                     </div>
                     <div class="modal-stat">
-                        <i class="fas fa-retweet"></i>
-                        <span id="modalReposts"></span> reposts
+                        <i class="fas fa-eye"></i>
+                        <span id="modalArtViews"></span> views
                     </div>
                     <div class="modal-stat">
-                        <i class="far fa-images"></i>
-                        <span id="modalImageCount"></span> images
+                        <i class="fas fa-book"></i>
+                        <span id="modalArtBookmarks"></span> bookmarks
                     </div>
                 </div>
-                <a id="modalPostLink" class="modal-post-link" href="#" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-bluesky"></i> View on Bluesky
-                </a>
+                
+                <div class="modal-tags" id="modalArtTags"></div>
+                
+                <div class="modal-buttons">
+                    <a id="modalArtLink" class="modal-art-link" href="#" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-external-link-alt"></i> View on Pixiv
+                    </a>
+                </div>
             </div>
         </div>
     </div>

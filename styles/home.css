@@ -36,6 +36,7 @@
 }
 
 .logo-container {
+    text-align: center;
     position: relative;
     margin-bottom: 2rem;
     padding: 2rem 3rem;

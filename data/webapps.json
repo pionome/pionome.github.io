@@ -1,7 +1,7 @@
 [
     {
         "name": "Gradient Texture Generator",
-        "description": "Online Viewer for TMX texture files",
+        "description": "Online Generator for gradient model textures",
         "thumbnail": "assets/web-apps/gradientTextureGenerator.png",
         "htmlFile": "web-apps/gradientTextureGenerator.html"
     },
