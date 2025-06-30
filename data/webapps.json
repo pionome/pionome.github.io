@@ -1,19 +1,25 @@
 [
     {
+        "name": "Quaternion Visualizer",
+        "description": "Online visualizer for quaternion rotation",
+        "thumbnail": "assets/web-apps/quaternionVisualizer.png",
+        "htmlFile": "web-apps/quaternionVisualizer.html"
+    },
+    {
         "name": "Gradient Texture Generator",
-        "description": "Online Generator for gradient model textures",
+        "description": "Online generator for gradient model textures",
         "thumbnail": "assets/web-apps/gradientTextureGenerator.png",
         "htmlFile": "web-apps/gradientTextureGenerator.html"
     },
 	{
         "name": "TMX Viewer",
-        "description": "Online Viewer for TMX texture files",
+        "description": "Online viewer for TMX texture files",
         "thumbnail": "assets/web-apps/tmxViewer.png",
         "htmlFile": "web-apps/tmxViewer.html"
     },
 	{
         "name": "RMD Viewer",
-        "description": "Online Viewer for RMD model files",
+        "description": "Online viewer for RMD model files",
         "thumbnail": "assets/web-apps/rmdViewer.png",
         "htmlFile": "web-apps/rmdViewer.html"
     }

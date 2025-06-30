@@ -12,18 +12,6 @@
     <script src="../scripts/apps/reader.js"></script>
 	<link rel="stylesheet" href="../styles/shared.css">
 	<link rel="stylesheet" href="../styles/web-apps.css">
-
-    <style>
-        body {
-            overflow: hidden;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                overflow: auto;
-            }
-        }
-    </style>
 </head>
 <body>
     <nav>
@@ -55,13 +43,20 @@
 			</label>
             <button id="saveBtn"><i class="fas fa-download"></i> Save as PNG</button>
             <div id="textureInfo">
+                <div class="section-title">
+                    <i class="fas fa-image"></i>
+                    <span>Texture Info</span>
+                </div>
                 <p>No texture loaded</p>
             </div>
             <div id="controls">
-                <p>Texture Controls:</p>
-                <p>LMB Drag: Pan texture</p>
-                <p>Mouse Wheel: Zoom in/out</p>
-                <p>Double Click: Reset view</p>
+                <div class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Controls</span>
+                </div>
+                <p>• Left Drag: Pan texture</p>
+                <p>• Scroll: Zoom in/out</p>
+                <p>• Double Click: Reset view</p>
             </div>
         </div>
         <div id="appDiv">

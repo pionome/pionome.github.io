@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quaternion Visualizer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Fredoka+One&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/png" href="../assets/eye.png">
+	<link rel="stylesheet" href="../styles/shared.css">
+	<link rel="stylesheet" href="../styles/web-apps.css">
+    <style>
+
+        .control-section {
+            background: rgba(214, 230, 255, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .euler-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .slider-container {
+            background: var(--panel-bg);
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        
+        .slider-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, var(--accent-color), var(--primary-color));
+            border-radius: 4px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(74, 143, 231, 0.5);
+            -webkit-appearance: none;
+            border: 2px solid var(--primary-color);
+        }
+        
+        .value-input {
+            width: 100%;
+            margin-top: 8px;
+            padding: 8px;
+            background: white;
+            border: 2px solid #d6e6ff;
+            color: #333;
+            border-radius: 6px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+        }
+        
+        .value-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(107, 162, 255, 0.2);
+        }
+        
+        .quat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .input-group {
+            margin-bottom: 10px;
+        }
+        
+        .input-label {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        
+        .quat-input {
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            width: 100%;
+            border: 2px solid #d6e6ff;
+            background: white;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        .quat-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(107, 162, 255, 0.2);
+        }
+        
+        .matrix-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .matrix-cell {
+            flex: 1;
+            margin: 0 4px;
+            background: white;
+            border-radius: 4px;
+            padding: 8px;
+            text-align: center;
+            border: 2px solid #d6e6ff;
+        }
+        
+        .matrix-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #333;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            outline: none;
+            padding: 5px;
+        }
+        
+        .color-chips {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .color-chip {
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        #axesInfo {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .axis-display {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            color: #333;
+        }
+        
+        .axis-color {
+            width: 22px;
+            height: 22px;
+            margin-right: 10px;
+            border-radius: 4px;
+            box-shadow: 0 0 4px rgba(0,0,0,0.2);
+        }
+
+        #side {
+            width: 50%;
+        }
+        
+        @media (max-width: 1024px) {
+            .euler-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .quat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+            }
+            
+            #side {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .euler-controls {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .euler-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .color-chips {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="../art.html"><i class="fas fa-paint-brush"></i> Art</a></li>
+            <li><a href="../games.html"><i class="fas fa-gamepad"></i> Games</a></li>
+            <li><a href="../web-apps.html"><i class="fas fa-window-maximize"></i> Web Apps</a></li>
+            <li><a href="../programs.html"><i class="fas fa-code"></i> Programs</a></li>
+            <li><a href="../misc-programs.html"><i class="fas fa-tools"></i> Misc Programs</a></li>
+            <li><a href="../mods.html"><i class="fas fa-cube"></i> Mods</a></li>
+            <li><a href="../repositories.html"><i class="fas fa-code-branch"></i> Repositories</a></li>
+        </ul>
+    </nav>
+    <main>
+        <div id="side">
+            <h1>Quaternion Visualizer</h1>
+            
+            <div class="control-section">
+                <div class="section-title">
+                    <i class="fas fa-link"></i>
+                    <span>Euler Angles (Degrees)</span>
+                </div>
+                <div class="euler-controls">
+                    <div class="slider-container">
+                        <label class="slider-label">X (Pitch)</label>
+                        <input type="range" id="eulerX" min="-180" max="180" value="0">
+                        <input type="number" id="eulerX-value" value="0" class="value-input">
+                    </div>
+                    <div class="slider-container">
+                        <label class="slider-label">Y (Yaw)</label>
+                        <input type="range" id="eulerY" min="-180" max="180" value="0">
+                        <input type="number" id="eulerY-value" value="0" class="value-input">
+                    </div>
+                    <div class="slider-container">
+                        <label class="slider-label">Z (Roll)</label>
+                        <input type="range" id="eulerZ" min="-180" max="180" value="0">
+                        <input type="number" id="eulerZ-value" value="0" class="value-input">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-section">
+                <div class="section-title">
+                    <i class="fas fa-bolt"></i>
+                    <span>Quaternion Values</span>
+                </div>
+                <div class="quat-grid">
+                    <div class="input-group">
+                        <label class="input-label">W</label>
+                        <input type="number" id="quatW" value="1.0" step="0.01" class="quat-input">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">X</label>
+                        <input type="number" id="quatX" value="0.0" step="0.01" class="quat-input">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Y</label>
+                        <input type="number" id="quatY" value="0.0" step="0.01" class="quat-input">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Z</label>
+                        <input type="number" id="quatZ" value="0.0" step="0.01" class="quat-input">
+                    </div>
+                </div>
+                <button id="applyQuat" class="btn">
+                    <i class="fas fa-check-circle"></i> Apply Quaternion
+                </button>
+            </div>
+            
+            <div class="control-section">
+                <div class="section-title">
+                    <i class="fas fa-table"></i>
+                    <span>Rotation Matrix</span>
+                </div>
+                <div class="matrix-row">
+                    <div class="matrix-cell">
+                        <input type="number" class="matrix-input" value="1.0" step="0.01" id="m00">
+                    </div>
+                    <div class="matrix-cell">
+                        <input type="number" class="matrix-input" value="0.0" step="0.01" id="m01">
+                    </div>
+                    <div class="matrix-cell">
+                        <input type="number" class="matrix-input" value="0.0" step="0.01" id="m02">
+                    </div>
+                </div>
+                <div class="matrix-row">
+                    <div class="matrix-cell">
+                        <input type="number" class="matrix-input" value="0.0" step="0.01" id="m10">
+                    </div>
+                    <div class="matrix-cell">
+                        <input type="number" class="matrix-input" value="1.0" step="0.01" id="m11">
+                    </div>
+                    <div class="matrix-cell">
+                        <input type="number" class="matrix-input" value="0.0" step="0.01" id="m12">
+                    </div>
+                </div>
+                <div class="matrix-row">
+                    <div class="matrix-cell">
+                        <input type="number" class="matrix-input" value="0.0" step="0.01" id="m20">
+                    </div>
+                    <div class="matrix-cell">
+                        <input type="number" class="matrix-input" value="0.0" step="0.01" id="m21">
+                    </div>
+                    <div class="matrix-cell">
+                        <input type="number" class="matrix-input" value="1.0" step="0.01" id="m22">
+                    </div>
+                </div>
+                <button id="applyMatrix" class="btn">
+                    <i class="fas fa-check-circle"></i> Apply Matrix
+                </button>
+            </div>
+            
+            <div class="control-section">
+                <div class="section-title">
+                    <i class="fas fa-cube"></i>
+                    <span>Cube Faces</span>
+                </div>
+                <div class="color-chips">
+                    <div class="color-chip" style="background: rgba(255, 51, 51, 0.7);">+X (Right)</div>
+                    <div class="color-chip" style="background: rgba(255, 119, 0, 0.7);">-X (Left)</div>
+                    <div class="color-chip" style="background: rgba(51, 204, 51, 0.7);">+Y (Top)</div>
+                    <div class="color-chip" style="background: rgba(51, 102, 255, 0.7);">-Y (Bottom)</div>
+                    <div class="color-chip" style="background: rgba(255, 255, 51, 0.7);">+Z (Front)</div>
+                    <div class="color-chip" style="background: rgba(170, 85, 255, 0.7);">-Z (Back)</div>
+                </div>
+            </div>
+            
+            <div class="control-section">
+                <div class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Controls</span>
+                </div>
+                <p>• Left Drag: Rotate camera</p>
+                <p>• Scroll: Zoom in/out</p>
+                <p>• Right Drag: Pan camera</p>
+                <p>• Double Click: Reset view</p>
+            </div>
+        </div>
+        
+        <div id="appDiv">
+            <div id="axesInfo">
+                <div class="axis-display">
+                    <div class="axis-color" style="background: #ff5555;"></div>
+                    <span>X-Axis</span>
+                </div>
+                <div class="axis-display">
+                    <div class="axis-color" style="background: #55ff55;"></div>
+                    <span>Y-Axis</span>
+                </div>
+                <div class="axis-display">
+                    <div class="axis-color" style="background: #5555ff;"></div>
+                    <span>Z-Axis</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../scripts/shared.js"></script>
+    <script src="../scripts/apps/quaternionVisualizer.js"></script>
+</body>
+</html>

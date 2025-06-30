@@ -6,6 +6,16 @@
     --shadow-color: rgba(107, 162, 255, 0.3);
 }
 
+body {
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    body {
+        overflow: auto;
+    }
+}
+
 .webapp-card {
     background: white;
     border-radius: 15px;
@@ -179,7 +189,7 @@ button:disabled:hover {
     cursor: pointer;
 }
 
-#side div {
+#side > div:not(.checkbox-container) {
     margin-top: 1.5rem;
     padding: 1rem;
     background: rgba(214, 230, 255, 0.3);
@@ -187,13 +197,13 @@ button:disabled:hover {
     border-left: 4px solid var(--accent-color);
 }
 
-#side div p {
+#side > div p {
     margin: 0.5rem 0;
     font-size: 0.9rem;
     color: #555;
 }
 
-#side div p:first-child {
+#side > div p:first-child {
     font-weight: bold;
     color: var(--primary-color);
     margin-bottom: 0.8rem;
@@ -344,7 +354,7 @@ canvas {
     padding: 1rem;
     box-shadow: 0 10px 30px rgba(182, 203, 255, 0.3);
     border: 2px solid rgba(230, 230, 240, 0.8);
-    display: none; /* Hidden by default */
+    display: none;
 }
 
 #animation-controls {
@@ -365,7 +375,7 @@ canvas {
 }
 
 .animation-dropdown {
-    width: 200px; /* Fixed width */
+    width: 200px;
     padding: 0.5rem 1rem;
     border-radius: 8px;
     border: 2px solid #d6e6ff;
@@ -456,6 +466,15 @@ canvas {
     background: var(--primary-color);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(107, 162, 255, 0.3);
+}
+
+.section-title {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 @media (max-width: 768px) {

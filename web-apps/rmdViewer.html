@@ -14,18 +14,6 @@
     <script src="../scripts/apps/rmd.js"></script>
 	<link rel="stylesheet" href="../styles/shared.css">
 	<link rel="stylesheet" href="../styles/web-apps.css">
-    <style>
-	body {
-		overflow: hidden;
-	}
-
-	@media (max-width: 768px) {
-		body {
-			overflow: auto;
-		}
-	}
-        
-    </style>
 </head>
 <body>
     <nav>
@@ -60,11 +48,14 @@
                 <label for="BonesChk">Show Bones</label>
             </div>
             <div id="controls">
-                <p>Model Controls:</p>
-                <p>LMB Drag: Rotate model</p>
-                <p>RMB Drag: Move model</p>
-                <p>Mouse Wheel: Zoom in/out</p>
-                <p>Double Click: Reset view</p>
+                <div class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Controls</span>
+                </div>
+                <p>• Left Drag: Rotate model</p>
+                <p>• Right Drag: Move model</p>
+                <p>• Scroll: Zoom in/out</p>
+                <p>• Double Click: Reset view</p>
             </div>
         </div>
 		<div id="preview-container">
