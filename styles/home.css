@@ -109,12 +109,29 @@
     align-items: center;
 }
 
+.social-icon.vgen {
+  background-image: url('../assets/misc/vgen.png');
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.social-icon.kofi {
+  background-image: url('../assets/misc/kofi.png');
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .social-icon.twitter:hover { background: #1DA1F2; color: white; }
 .social-icon.bluesky:hover { background: #1185F0; color: white; }
 .social-icon.pixiv:hover { background: #0096FA; color: white; }
 .social-icon.github:hover { background: #333; color: white; }
 .social-icon.itchio:hover { background: #FA5C5C; color: white; }
 .social-icon.youtube:hover { background: #FF0000; color: white; }
+.social-icon.vgen:hover {  background-color: #B8FF26; background-image: url('../assets/misc/vgen-hover.png');}
+.social-icon.kofi:hover {  background-color: #FF6433; background-image: url('../assets/misc/kofi-hover.png');}
+
 
 .social-icon:nth-child(1) { animation-delay: 0.7s; }
 .social-icon:nth-child(2) { animation-delay: 0.8s; }
