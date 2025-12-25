@@ -4,52 +4,340 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pio - Games</title>
+    <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Pio" />
+    <link rel="manifest" href="/assets/site.webmanifest" />
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Fredoka+One&display=swap" rel="stylesheet">
-	<link rel="icon" type="image/png" href="assets/eye.png">
-    
-    <link rel="stylesheet" href="styles/shared.css">
-    <link rel="stylesheet" href="styles/games.css">
+    <style>
+        :root {
+            --bg-color: #f4f8ff;      
+            --grid-line: #dce7f7;     
+            --panel-bg: #ffffff;
+            --text-main: #5a6585;     
+            --accent-primary: #94b0ff;
+            --accent-secondary: #e0cdff;
+            --accent-tag: #eef2ff;
+            --border-width: 2px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(var(--grid-line) 2px, transparent 2px),
+                linear-gradient(90deg, var(--grid-line) 2px, transparent 2px);
+            background-size: 60px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: var(--border-width) solid var(--accent-primary);
+            border-radius: 0.75rem;
+        }
+
+        .navbar-toggle {
+            position: fixed;
+            font-size: 1.5rem;
+            top: 15px;
+            right: 15px;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1001;
+            background: white;
+        }
+
+        .navbar-toggle:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 4px 4px 0px var(--accent-primary);
+        }
+
+        .nav-panel {
+            transform-origin: right;
+            position: fixed;
+            top: 15px;
+            right: 100px;
+            scale: 0 100%;
+            opacity: 0;
+            visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            padding: 20px;
+            z-index: 1000;
+        }
+        
+        .nav-main-row {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .nav-btn-large {
+            flex: 1;
+            text-align: center;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 800;
+            padding: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn-large:hover {
+            transform: translate(0px, -3px);
+            box-shadow: 0px 4px 0px var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .dashed-line {
+            border: none;
+            border-top: 2px dashed var(--grid-line);
+            margin: 5px 0;
+        }
+
+        .nav-sub-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .nav-tag-small {
+            text-decoration: none;
+            color: var(--text-main);
+            background: #fff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-tag-small:hover {
+            box-shadow: 0px 4px 0px var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .nav-panel.active {
+            animation: bounceIn 0.5s cubic-bezier(0.34, 1.16, 0.94, 1) forwards;
+        }
+
+        @keyframes bounceIn {
+            0% { scale: 0 100%; opacity: 0; visibility: hidden; }
+            60% { scale: 105% 100%; opacity: 1; visibility: visible; }
+            100% { scale: 100% 100%; opacity: 1; visibility: visible; }
+        }
+
+        .content-container { 
+            width: 98%;
+            max-width: 1500px;
+            margin: 100px 0 50px;
+        }
+        
+        .columns-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .column { 
+            flex: 1; 
+            min-width: 340px;
+            padding: 10px;
+        }
+
+        .vertical-divider {
+            width: 1px;
+            border-left: 8px dashed var(--grid-line);
+            margin: 60px 10px;
+            align-self: stretch;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0 0 40px;
+            text-align: center;
+            color: var(--text-main);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 315px); 
+            gap: 25px;
+            justify-content: center;
+        }
+
+        .game-card {
+            background: white;
+            border: var(--border-width) solid var(--accent-primary);
+            border-radius: 1rem;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+            width: 315px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover {
+            transform: translate(-5px, -5px);
+            box-shadow: 7px 7px 0px var(--accent-primary);
+        }
+
+        .game-thumbnail {
+            width: 315px;
+            height: 250px; 
+            object-fit: cover;
+            border-bottom: var(--border-width) solid var(--accent-primary);
+        }
+
+        .game-info {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-grow: 1;
+        }
+
+        .game-name {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .game-description {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            opacity: 0.85;
+        }
+        
+        .game-jam {
+            margin-top: auto;
+            font-size: 0.75rem;
+            font-weight: 800;
+            background: var(--accent-tag);
+            padding: 5px 12px;
+            border-radius: 8px;
+            width: fit-content;
+            border: 1px solid var(--grid-line);
+        }
+
+        #loading {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 1200px) {
+            .columns-wrapper { flex-direction: column; align-items: center; }
+            .vertical-divider {
+                width: 80%;
+                height: 1px;
+                border-left: none;
+                border-top: 8px dashed var(--grid-line);
+                margin: 40px 0;
+            }
+            .column { width: 100%; max-width: 1000px; }
+            .nav-panel { top: 75px; left: 0; right: 0; margin: 10px; transform-origin: top; }
+        }
+    </style>
 </head>
 <body>
-    <nav>
-        <ul class="nav-links">
-            <li><a href="./index.html"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="./art.html"><i class="fas fa-paint-brush"></i> Art</a></li>
-            <li><a href="#"><i class="fas fa-gamepad"></i> Games</a></li>
-            <li><a href="./web-apps.html"><i class="fas fa-window-maximize"></i> Web Apps</a></li>
-            <li><a href="./programs.html"><i class="fas fa-code"></i> Programs</a></li>
-            <li><a href="./misc-programs.html"><i class="fas fa-tools"></i> Misc Programs</a></li>
-            <li><a href="./mods.html"><i class="fas fa-cube"></i> Mods</a></li>
-            <li><a href="./repositories.html"><i class="fas fa-code-branch"></i> Repositories</a></li>
-        </ul>
-    </nav>
-    <div class="background" id="background"></div>
 
-    <div class="container">
-        <div class="header">
-            <h1 class="title">Game Jam Games</h1>
-            <p class="subtitle">A collection of games created during game jams</p>
+     <nav class="panel nav-panel" id="navbarPanel">
+        <div class="nav-main-row">
+            <a href="/" class="nav-btn-large"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="/art" class="nav-btn-large"><i class="fa-solid fa-paint-brush"></i> Art</a>
+            <a href="/games" class="nav-btn-large" style="color:var(--accent-primary)"><i class="fa-solid fa-gamepad"></i> Games</a>
         </div>
+        <hr class="dashed-line">
+        <div class="nav-sub-row">
+            <a href="/web-apps" class="nav-tag-small">Web Apps</a>
+            <a href="/programs" class="nav-tag-small">Programs</a>
+            <a href="/misc-programs" class="nav-tag-small">Misc Programs</a>
+            <a href="/repositories" class="nav-tag-small">Repos</a>
+            <a href="/mods" class="nav-tag-small">Mods</a>
+        </div>
+    </nav>
+    <div class="panel navbar-toggle" id="navbarToggle"><i class="fa-solid fa-bars"></i></div>
 
-        <div id="loading">Loading games...</div>
-        <div id="error"></div>
-
-        <div class="games-sections-container">
-            <div class="games-section">
-                <h2 class="section-title">Solo Projects</h2>
-                <div id="games-grid-solo" class="grid"></div>
-            </div>
-
-            <div class="games-section">
+    <div class="content-container">
+        <div id="loading">Loading Projects...</div>
+        <div class="columns-wrapper">
+            <div class="column" id="collab-column" style="display:none;">
                 <h2 class="section-title">Collaborations</h2>
-                <div id="games-grid-collab" class="grid"></div>
+                <div id="games-grid-collab" class="games-grid"></div>
+            </div>
+            <div class="vertical-divider" id="divider" style="display:none;"></div>
+            <div class="column" id="solo-column" style="display:none;">
+                <h2 class="section-title">Solo Projects</h2>
+                <div id="games-grid-solo" class="games-grid"></div>
             </div>
         </div>
     </div>
-    <script src="./scripts/shared.js"></script>
-    <script src="./scripts/games.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/data/games.json')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                
+                const soloGames = data.filter(g => g.collaboration === false).reverse();
+                const collabGames = data.filter(g => g.collaboration === true).reverse();
+                
+                if(collabGames.length > 0) {
+                    document.getElementById('collab-column').style.display = 'block';
+                    collabGames.forEach(g => createCard(g, 'games-grid-collab'));
+                }
+                
+                if(soloGames.length > 0 && collabGames.length > 0) {
+                    document.getElementById('divider').style.display = 'block';
+                }
+                
+                if(soloGames.length > 0) {
+                    document.getElementById('solo-column').style.display = 'block';
+                    soloGames.forEach(g => createCard(g, 'games-grid-solo'));
+                }
+            });
+
+        function createCard(game, containerId) {
+            const container = document.getElementById(containerId);
+            const card = document.createElement('a');
+            card.className = 'game-card';
+            card.href = game.link;
+            card.target = "_blank";
+            card.innerHTML = `
+                <img src="${game.thumbnail}" class="game-thumbnail">
+                <div class="game-info">
+                    <h3 class="game-name">${game.name}</h3>
+                    <p class="game-description">${game.description}</p>
+                    ${game.jam ? `<div class="game-jam">${game.jam}</div>` : ''}
+                </div>
+            `;
+            container.appendChild(card);
+        }
+    });
+</script>
+<script src="/scripts/shared.js"></script>
 </body>
 </html>

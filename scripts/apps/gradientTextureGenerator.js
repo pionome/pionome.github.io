@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById('texturePreview');
     const ctx = canvas.getContext('2d');
     
+    // Modal Elements
     const colorPickerModal = document.getElementById('colorPickerModal');
     const colorPickerInput = document.getElementById('colorPickerInput');
     const colorHexInput = document.getElementById('colorHexInput');
@@ -23,6 +24,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentColorTarget = null;
     let currentStripIndex = null;
     let currentStopIndex = null;
+    
+    // Initial Data
     let strips = [
         {
             gradient: [
@@ -38,9 +41,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     ];
     
+    // --- Initialization ---
     renderStrips();
     updateCanvas();
 
+    // --- Event Listeners ---
     widthInput.addEventListener('input', updateCanvas);
     heightInput.addEventListener('input', updateCanvas);
     horizontalBtn.addEventListener('click', () => setDirection('horizontal'));
@@ -50,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
     randomizeBtn.addEventListener('click', randomizeColors);
     resetBtn.addEventListener('click', resetToDefault);
     
+    // Color Picker Events
     colorPickerInput.addEventListener('input', updateColorInputs);
     colorHexInput.addEventListener('input', updateColorFromHex);
     colorRgbInput.addEventListener('input', updateColorFromRgb);
@@ -63,6 +69,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // --- Logic Functions ---
+
     function setDirection(direction) {
         stripDirection = direction;
         if (direction === 'horizontal') {
@@ -88,6 +96,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         renderStrips();
         updateCanvas();
+        // Scroll to bottom of container
+        stripContainer.scrollTop = stripContainer.scrollHeight;
     }
     
     function removeStrip(index) {
@@ -104,6 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const strip = strips[stripIndex];
         
         if (strip.gradient.length >= 2) {
+            // Find largest gap and insert in middle
             const gradientIndex = Math.floor(Math.random() * (strip.gradient.length - 1));
             const position = (strip.gradient[gradientIndex].position + strip.gradient[gradientIndex + 1].position) / 2;
             const color = getIntermediateColor(strip.gradient[gradientIndex].color, strip.gradient[gradientIndex + 1].color, 0.5);
@@ -146,26 +157,8 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCanvas();
     }
     
-    function getRandomColor() {
-        return `#${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}`;
-    }
-    
-    function getIntermediateColor(color1, color2, ratio) {
-        const r1 = parseInt(color1.substring(1, 3), 16);
-        const g1 = parseInt(color1.substring(3, 5), 16);
-        const b1 = parseInt(color1.substring(5, 7), 16);
-        
-        const r2 = parseInt(color2.substring(1, 3), 16);
-        const g2 = parseInt(color2.substring(3, 5), 16);
-        const b2 = parseInt(color2.substring(5, 7), 16);
-        
-        const r = Math.round(r1 + (r2 - r1) * ratio);
-        const g = Math.round(g1 + (g2 - g1) * ratio);
-        const b = Math.round(b1 + (b2 - b1) * ratio);
-        
-        return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
-    }
-    
+    // --- Rendering UI ---
+
     function renderStrips() {
         stripContainer.innerHTML = '';
         
@@ -173,40 +166,36 @@ document.addEventListener('DOMContentLoaded', function() {
             const stripElement = document.createElement('div');
             stripElement.className = 'strip';
             
+            // Header
             const stripHeader = document.createElement('div');
             stripHeader.className = 'strip-header';
             
-            const stripTitle = document.createElement('div');
-            stripTitle.className = 'strip-title';
+            const stripTitle = document.createElement('span');
             stripTitle.textContent = `Strip ${stripIndex + 1}`;
             
             const removeStripBtn = document.createElement('button');
-            removeStripBtn.className = 'remove-strip';
-            removeStripBtn.innerHTML = `<i class="fas fa-times"></i> Remove`;
-            removeStripBtn.addEventListener('click', () => removeStrip(stripIndex));
+            removeStripBtn.className = 'btn-ui btn-ui-small btn-danger';
+            removeStripBtn.style.width = 'auto';
+            removeStripBtn.innerHTML = `<i class="fas fa-trash"></i>`;
+            removeStripBtn.onclick = () => removeStrip(stripIndex);
             
             stripHeader.appendChild(stripTitle);
             stripHeader.appendChild(removeStripBtn);
             
+            // Stops
             const gradientStops = document.createElement('div');
-            gradientStops.className = 'gradient-stops';
             
             strip.gradient.forEach((stop, stopIndex) => {
                 const stopElement = document.createElement('div');
                 stopElement.className = 'gradient-stop';
                 
-                const colorContainer = document.createElement('div');
-                colorContainer.className = 'color-input-container';
-                
+                // Color Preview (Click to open modal)
                 const colorPreview = document.createElement('div');
                 colorPreview.className = 'color-preview';
                 colorPreview.style.backgroundColor = stop.color;
-                colorPreview.addEventListener('click', () => {
-                    openColorPicker(stripIndex, stopIndex, stop.color);
-                });
+                colorPreview.onclick = () => openColorPicker(stripIndex, stopIndex, stop.color);
                 
-                colorContainer.appendChild(colorPreview);
-                
+                // Range Slider
                 const positionInput = document.createElement('input');
                 positionInput.type = 'range';
                 positionInput.min = '0';
@@ -215,40 +204,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 positionInput.value = stop.position;
                 
                 let isDragging = false;
+                positionInput.onmousedown = () => { isDragging = true; };
+                positionInput.onmouseup = () => { isDragging = false; };
                 
-                positionInput.addEventListener('mousedown', () => {
-                    isDragging = true;
-                });
-                
-                positionInput.addEventListener('mouseup', () => {
-                    isDragging = false;
-                });
-                
-                positionInput.addEventListener('input', (e) => {
+                // Real-time update for drag
+                positionInput.oninput = (e) => {
                     const value = parseFloat(e.target.value);
-                    updateGradientStop(stripIndex, stopIndex, 'position', value);
-                    
                     const positionValue = e.target.nextElementSibling;
                     positionValue.textContent = Math.round(value * 100) + '%';
-                });
+                    
+                    // Only update canvas real-time, don't re-render DOM yet
+                    strips[stripIndex].gradient[stopIndex].position = value;
+                    updateCanvas(); 
+                };
                 
-                positionInput.addEventListener('change', (e) => {
+                // Sort and re-render DOM on release
+                positionInput.onchange = (e) => {
                     if (!isDragging) {
                         const value = parseFloat(e.target.value);
                         updateGradientStop(stripIndex, stopIndex, 'position', value);
                     }
-                });
+                };
                 
                 const positionValue = document.createElement('span');
                 positionValue.className = 'position-value';
                 positionValue.textContent = Math.round(stop.position * 100) + '%';
                 
                 const removeBtn = document.createElement('button');
-                removeBtn.className = 'remove-stop';
+                removeBtn.className = 'remove-stop-btn';
                 removeBtn.innerHTML = `<i class="fas fa-times"></i>`;
-                removeBtn.addEventListener('click', () => removeGradientStop(stripIndex, stopIndex));
+                removeBtn.onclick = () => removeGradientStop(stripIndex, stopIndex);
                 
-                stopElement.appendChild(colorContainer);
+                stopElement.appendChild(colorPreview);
                 stopElement.appendChild(positionInput);
                 stopElement.appendChild(positionValue);
                 stopElement.appendChild(removeBtn);
@@ -256,10 +243,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 gradientStops.appendChild(stopElement);
             });
             
+            // Add Stop Button
             const addStopBtn = document.createElement('button');
-            addStopBtn.className = 'add-stop';
-            addStopBtn.innerHTML = `<i class="fas fa-plus"></i> Add Color Stop`;
-            addStopBtn.addEventListener('click', () => addGradientStop(stripIndex));
+            addStopBtn.className = 'btn-ui btn-ui-small';
+            addStopBtn.style.marginTop = '10px';
+            addStopBtn.style.width = '100%';
+            addStopBtn.innerHTML = `<i class="fas fa-plus"></i> Add Color`;
+            addStopBtn.onclick = () => addGradientStop(stripIndex);
             
             stripElement.appendChild(stripHeader);
             stripElement.appendChild(gradientStops);
@@ -270,8 +260,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function updateCanvas() {
-        const width = parseInt(widthInput.value);
-        const height = parseInt(heightInput.value);
+        const width = parseInt(widthInput.value) || 10;
+        const height = parseInt(heightInput.value) || 10;
         
         canvas.width = width;
         canvas.height = height;
@@ -297,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             ctx.fillStyle = gradient;
-            ctx.fillRect(0, currentY, width, stripHeight);
+            ctx.fillRect(0, currentY, width, stripHeight); // Use slightly larger height to prevent gaps
             
             currentY += stripHeight;
         }
@@ -321,9 +311,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // --- Helpers ---
+
+    function getRandomColor() {
+        return `#${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}`;
+    }
+    
+    function getIntermediateColor(color1, color2, ratio) {
+        const r1 = parseInt(color1.substring(1, 3), 16);
+        const g1 = parseInt(color1.substring(3, 5), 16);
+        const b1 = parseInt(color1.substring(5, 7), 16);
+        
+        const r2 = parseInt(color2.substring(1, 3), 16);
+        const g2 = parseInt(color2.substring(3, 5), 16);
+        const b2 = parseInt(color2.substring(5, 7), 16);
+        
+        const r = Math.round(r1 + (r2 - r1) * ratio);
+        const g = Math.round(g1 + (g2 - g1) * ratio);
+        const b = Math.round(b1 + (b2 - b1) * ratio);
+        
+        return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+    }
+
     function downloadTexture() {
         const link = document.createElement('a');
-        link.download = `gradient-texture-${new Date().toISOString().slice(0,10)}.png`;
+        link.download = `gradient-${Date.now()}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
     }
@@ -340,28 +352,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function resetToDefault() {
         strips = [
-            {
-                gradient: [
-                    { color: '#ff6b9d', position: 0 },
-                    { color: '#d43a7d', position: 1 }
-                ]
-            },
-            {
-                gradient: [
-                    { color: '#5a2d50', position: 0 },
-                    { color: '#3a1d32', position: 1 }
-                ]
-            }
+            { gradient: [{ color: '#ff6b9d', position: 0 }, { color: '#d43a7d', position: 1 }] },
+            { gradient: [{ color: '#5a2d50', position: 0 }, { color: '#3a1d32', position: 1 }] }
         ];
-        stripDirection = 'horizontal';
-        horizontalBtn.classList.add('active');
-        verticalBtn.classList.remove('active');
+        setDirection('horizontal');
         widthInput.value = 512;
         heightInput.value = 512;
         renderStrips();
         updateCanvas();
     }
     
+    // --- Color Picker Logic ---
+
     function openColorPicker(stripIndex, stopIndex, currentColor) {
         currentStripIndex = stripIndex;
         currentStopIndex = stopIndex;
@@ -391,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentStripIndex !== null && currentStopIndex !== null) {
             const color = colorPickerInput.value;
             updateGradientStop(currentStripIndex, currentStopIndex, 'color', color);
-            renderStrips();
+            renderStrips(); // Rerender to update the preview box in the sidebar
             updateCanvas();
         }
         closeColorPicker();
@@ -400,27 +402,18 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateColorInputs() {
         const color = colorPickerInput.value;
         colorHexInput.value = color;
-        
         const rgb = hexToRgb(color);
-        if (rgb) {
-            colorRgbInput.value = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
-        }
+        if (rgb) colorRgbInput.value = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
     }
     
     function updateColorFromHex() {
         let hex = colorHexInput.value;
-        
-        if (hex && !hex.startsWith('#')) {
-            hex = '#' + hex;
-        }
+        if (hex && !hex.startsWith('#')) hex = '#' + hex;
         
         if (/^#[0-9A-F]{6}$/i.test(hex)) {
             colorPickerInput.value = hex;
-            
             const rgb = hexToRgb(hex);
-            if (rgb) {
-                colorRgbInput.value = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
-            }
+            if (rgb) colorRgbInput.value = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
         }
     }
     
@@ -442,11 +435,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function hexToRgb(hex) {
-        const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-        hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-            return r + r + g + g + b + b;
-        });
-        
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? {
             r: parseInt(result[1], 16),

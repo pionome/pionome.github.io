@@ -4,77 +4,294 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pio - Misc Programs</title>
+    <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Pio" />
+    <link rel="manifest" href="/assets/site.webmanifest" />
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Fredoka+One&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="assets/eye.png">
-    <link rel="stylesheet" href="styles/shared.css">
-    <link rel="stylesheet" href="styles/misc-programs.css">
+    <style>
+        :root {
+            --bg-color: #f4f8ff;      
+            --grid-line: #dce7f7;     
+            --panel-bg: #ffffff;
+            --text-main: #5a6585;     
+            --accent-primary: #94b0ff;
+            --accent-secondary: #e0cdff;
+            --accent-tag: #eef2ff;
+            --border-width: 2px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(var(--grid-line) 2px, transparent 2px),
+                linear-gradient(90deg, var(--grid-line) 2px, transparent 2px);
+            background-size: 60px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: var(--border-width) solid var(--accent-primary);
+            border-radius: 0.75rem;
+        }
+
+        .navbar-toggle {
+            position: fixed;
+            font-size: 1.5rem;
+            top: 15px;
+            right: 15px;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1001;
+            background: white;
+        }
+
+        .navbar-toggle:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 4px 4px 0px var(--accent-primary);
+        }
+
+        .nav-panel {
+            transform-origin: right;
+            position: fixed;
+            top: 15px;
+            right: 100px;
+            scale: 0 100%;
+            opacity: 0;
+            visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            padding: 20px;
+            z-index: 1000;
+        }
+        
+        .nav-main-row {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .nav-btn-large {
+            flex: 1;
+            text-align: center;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 800;
+            padding: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn-large:hover {
+            transform: translate(0px, -3px);
+            box-shadow: 0px 4px 0px var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .dashed-line {
+            border: none;
+            border-top: 2px dashed var(--grid-line);
+            margin: 5px 0;
+        }
+
+        .nav-sub-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .nav-tag-small {
+            text-decoration: none;
+            color: var(--text-main);
+            background: #fff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-tag-small:hover {
+            box-shadow: 0px 4px 0px var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .nav-panel.active {
+            animation: bounceIn 0.5s cubic-bezier(0.34, 1.16, 0.94, 1) forwards;
+        }
+
+        @keyframes bounceIn {
+            0% { scale: 0 100%; opacity: 0; visibility: hidden; }
+            60% { scale: 105% 100%; opacity: 1; visibility: visible; }
+            100% { scale: 100% 100%; opacity: 1; visibility: visible; }
+        }
+
+        .content-container {
+            width: 98%;
+            max-width: 1200px;
+            margin: 100px 0 50px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0 0 40px;
+            text-align: center;
+        }
+
+        .misc-programs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .misc-program {
+            background: white;
+            border: var(--border-width) solid var(--accent-primary);
+            border-radius: 1rem;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .misc-program:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 5px 5px 0px var(--accent-primary);
+        }
+
+        .misc-program-info {
+            flex-grow: 1;
+        }
+
+        .misc-program-name {
+            margin: 0 0 5px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .misc-program-description {
+            margin: 0;
+            font-size: 0.95rem;
+            opacity: 0.85;
+            line-height: 1.4;
+        }
+
+        .misc-program-button {
+            background: var(--accent-tag);
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--grid-line);
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .misc-program-button:hover {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        #loading, #error {
+            text-align: center;
+            font-weight: 800;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .misc-program { flex-direction: column; align-items: stretch; gap: 15px; }
+            .misc-program-button { width: 100%; text-align: center; display: block; box-sizing: border-box; }
+            .nav-panel { top: 75px; left: 0; right: 0; margin: 10px; transform-origin: top; }
+        }
+    </style>
 </head>
 <body>
-    <nav>
-        <ul class="nav-links">
-            <li><a href="./index.html"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="./art.html"><i class="fas fa-paint-brush"></i> Art</a></li>
-            <li><a href="./games.html"><i class="fas fa-gamepad"></i> Games</a></li>
-            <li><a href="./web-apps.html"><i class="fas fa-window-maximize"></i> Web Apps</a></li>
-            <li><a href="./programs.html"><i class="fas fa-code"></i> Programs</a></li>
-            <li><a href="#"><i class="fas fa-tools"></i> Misc Programs</a></li>
-            <li><a href="./mods.html"><i class="fas fa-cube"></i> Mods</a></li>
-            <li><a href="./repositories.html"><i class="fas fa-code-branch"></i> Repositories</a></li>
-        </ul>
-    </nav>
-    <div class="background" id="background"></div>
 
-    <div class="container">
-        <div class="header">
-            <h1 class="title">Misc Programs</h1>
-            <p class="subtitle">Small utility programs that don't deserve their own page</p>
-            <p class="misc-note">All programs include their source code</p>
+    <nav class="panel nav-panel" id="navbarPanel">
+        <div class="nav-main-row">
+            <a href="/" class="nav-btn-large"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="/art" class="nav-btn-large"><i class="fa-solid fa-paint-brush"></i> Art</a>
+            <a href="/games" class="nav-btn-large"><i class="fa-solid fa-gamepad"></i> Games</a>
         </div>
+        <hr class="dashed-line">
+        <div class="nav-sub-row">
+            <a href="/web-apps" class="nav-tag-small">Web Apps</a>
+            <a href="/programs" class="nav-tag-small">Programs</a>
+            <a href="/misc-programs" class="nav-tag-small" style="color:var(--accent-primary)">Misc Programs</a>
+            <a href="/repositories" class="nav-tag-small">Repos</a>
+            <a href="/mods" class="nav-tag-small">Mods</a>
+        </div>
+    </nav>
+    <div class="panel navbar-toggle" id="navbarToggle"><i class="fa-solid fa-bars"></i></div>
 
-        <div id="loading">Loading programs...</div>
-        <div id="error"></div>
-
-        <div id="misc-programs-list"></div>
+    <div class="content-container">
+        <h2 class="section-title">Miscellaneous Programs</h2>
+        <div id="loading">Fetching data...</div>
+        <div id="error" style="display:none;"></div>
+        <div id="misc-programs-list" class="misc-programs-list"></div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const programsList = document.getElementById('misc-programs-list');
-            const loading = document.getElementById('loading');
-            const errorDiv = document.getElementById('error');
+<script>
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const programsList = document.getElementById('misc-programs-list');
+        const loading = document.getElementById('loading');
+        const errorDiv = document.getElementById('error');
 
-            fetch('data/misc-programs.json')
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.json();
-                })
-                .then(data => {
-                    loading.style.display = 'none';
-                    data.forEach(program => createMiscProgram(program, programsList));
-                })
-                .catch(error => {
-                    loading.style.display = 'none';
-                    errorDiv.textContent = `Error loading programs: ${error.message}`;
-                    errorDiv.style.display = 'block';
+        fetch('data/misc-programs.json')
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                loading.style.display = 'none';
+                data.forEach(program => {
+                    const programDiv = document.createElement('div');
+                    programDiv.className = 'misc-program';
+                    programDiv.innerHTML = `
+                        <div class="misc-program-info">
+                            <h3 class="misc-program-name">${program.name}</h3>
+                            <p class="misc-program-description">${program.description}</p>
+                        </div>
+                        <a href="${program.fileName}" class="misc-program-button">
+                            <i class="fa-solid fa-download"></i> Download
+                        </a>
+                    `;
+                    programsList.appendChild(programDiv);
                 });
-
-            function createMiscProgram(program, container) {
-                const programDiv = document.createElement('div');
-                programDiv.className = 'misc-program';
-
-                programDiv.innerHTML = `
-                    <h3 class="misc-program-name">${program.name}</h3>
-                    <p class="misc-program-description">${program.description}</p>
-                    <a href="${program.fileName}" class="misc-program-button">Download</a>
-                `;
-
-                container.appendChild(programDiv);
-            }
-        });
-    </script>
-    <script src="./scripts/shared.js"></script>
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                errorDiv.textContent = `Error loading programs: ${error.message}`;
+                errorDiv.style.display = 'block';
+            });
+    });
+</script>
+<script src="/scripts/shared.js"></script>
 </body>
 </html>

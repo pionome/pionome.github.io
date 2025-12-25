@@ -3,64 +3,406 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pio</title>
+    <title>Pio - Home</title>
+    <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Pio" />
+    <link rel="manifest" href="/assets/site.webmanifest" />
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Fredoka+One&display=swap" rel="stylesheet">
-	<link rel="icon" type="image/png" href="assets/eye.png">
-    <link rel="stylesheet" href="styles/shared.css">
-    <link rel="stylesheet" href="styles/home.css">
+    <style>
+        :root {
+            --bg-color: #f4f8ff;
+            --grid-line: #dce7f7;
+            --panel-bg: #ffffff;
+            --text-main: #5a6585;
+            --accent-primary: #94b0ff;
+            --accent-secondary: #e0cdff;
+            --accent-tag: #eef2ff;
+            --border-width: 2px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(var(--grid-line) 2px, transparent 2px),
+                linear-gradient(90deg, var(--grid-line) 2px, transparent 2px);
+            background-size: 60px 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body::after {
+            position: absolute; width: 0; height: 0; overflow: hidden; z-index: -1;
+            content: url('blink-mid.png') url('blink-full.png') url('click-reaction.png');
+        }
+
+        .layout-wrapper {
+            display: flex;
+            gap: 40px;
+            width: 90%;
+            max-width: 1000px;
+            position: relative;
+            z-index: 2;
+            zoom: 150%;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: var(--border-width) solid var(--accent-primary);
+            border-radius: 0.75rem;
+            padding: 20px;
+            position: relative;
+        }
+
+        .sidebar {
+            flex: 0 0 16rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 250px;
+            background-color: white;
+            border: var(--border-width) solid var(--accent-primary);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .profile-img img {
+            width: 110%;
+            height: 200%;
+            object-fit: cover;
+            transition: filter 0.2s;
+        }
+
+        .name-badge {
+            background: var(--accent-primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 6px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .nav-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            padding: 4%;
+        }
+
+        .nav-main-row {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .nav-btn-large {
+            flex: 1;
+            text-align: center;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 800;
+            padding: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn-large:hover {
+            transform: translate(0px, -3px);
+            box-shadow: 0px 4px 0px var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .dashed-line {
+            border: none;
+            border-top: 2px dashed var(--grid-line);
+            margin: 5px 0;
+        }
+
+        .nav-sub-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .nav-tag-small {
+            text-decoration: none;
+            color: var(--text-main);
+            background: #fff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-tag-small:hover {
+            box-shadow: 0px 4px 0px var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+            background: #fff;
+            border: 2px solid var(--accent-primary);
+            border-radius: 8px;
+            padding: 0.8rem;
+            transition: transform 0.1s, box-shadow 0.1s;
+            will-change: transform;
+        }
+
+        .icon-box {
+            width: 35px;
+            height: 35px;
+            background: var(--accent-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 1.2rem;
+        }
+
+        .link-card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 4px 4px 0px var(--accent-primary);
+        }
+        
+        .link-card:active {
+            transform: translate(0, 0);
+            box-shadow: 0px 0px 0px;
+        }
+        
+        @keyframes squish {
+            0%   { transform: scale(1, 1); }
+            30%  { transform: scale(1.05, 0.95); }
+            50%  { transform: scale(0.95, 1.05); }
+            100% { transform: scale(1, 1); }
+        }
+
+        .is-squishing {
+            animation: squish 0.4s ease-out;
+        }
+
+        #description {
+            font-size: 1.25rem;
+            line-height: 1.5;
+            margin: auto;
+        }
+
+        @media (max-width: 1595px) and (min-width: 995px) {
+            .nav-sub-row { gap: 5px; }
+            .nav-btn-large i { display: none;}
+            .link-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));}
+            .link-card { gap: 0.3rem; padding: 0.3rem;}
+            .layout-wrapper { padding-top: 2.5%; }
+            .main-content { gap: 7px; }
+        }
+
+        @media (max-width: 1295px) and (min-width: 995px) {
+            .nav-tag-small {font-size: 0.8rem; padding: 2px;}
+            .nav-main-row { gap:0;}
+        }
+
+        @media (max-width: 1055px) {
+            .link-grid { gap: 5px; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); }
+            .link-card span { display: none; }
+            .link-card { justify-content: center; }
+            .profile-img { height: 130px; width: 90%; }
+            .profile-img img { height: 250% }
+            .name-badge { padding: 2px; margin-bottom: 0;}
+            #description {font-size: unset;}
+        }
+
+        @media (max-width: 995px) {
+            .layout-wrapper { padding-top: 2%; flex-direction: column; width: 90%; gap: 20px; }
+            .profile-img { height:200px; width: 100%; }
+            .profile-img img { height:290%; }
+            .main-content { gap: 15px; }
+            .link-card { padding: 0.2rem; }
+            .sidebar { flex: unset; }
+        }
+
+        @media (max-width: 995px) and (min-width: 451px) {
+            .profile-img { height:165px; }
+            .main-content { flex-direction: column-reverse; }
+            .link-grid { display: flex; justify-content: space-between; gap: 0;}
+        }
+
+        @media (max-width: 750px) and (min-width: 451px) {
+            .link-grid { display: flex; flex-wrap: wrap; gap: 20px; }
+        }
+
+        @media (max-width: 450px) {
+            .layout-wrapper { gap: 15px; }
+            .panel { padding: 10px; }
+            .profile-img { height: 117px; margin-bottom: 10px; }
+            .profile-img img { width:110%; height: 200%; }
+            .nav-panel { flex-direction: row; gap: 0.6rem; padding: 5px;}
+            .nav-main-row { width: 40%; flex-direction: column; }
+            .dashed-line { border-right: 2px dashed var(--grid-line); border-top: none; }
+            .nav-sub-row { flex-direction: column; gap: 5px; justify-content: right; text-align: right; flex: 1; }
+            .nav-tag-small { font-size: 0.6rem; padding: 2px; border: 2px solid var(--accent-primary); border-radius: 10px; }
+            .nav-btn-large { font-size: 0.8rem; }
+        }
+
+        @media (max-width: 250px) {
+            .nav-btn-large { font-size: 0.6rem; }
+            .nav-tag-small { font-size: 0.5rem; }
+        }
+    </style>
 </head>
 <body>
-    <div class="background" id="background"></div>
-    
-    <nav>
-		<ul class="nav-links">
-			<li><a href="#"><i class="fas fa-home"></i> Home</a></li>
-			<li><a href="./art.html"><i class="fas fa-paint-brush"></i> Art</a></li>
-			<li><a href="./games.html"><i class="fas fa-gamepad"></i> Games</a></li>
-			<li><a href="./web-apps.html"><i class="fas fa-window-maximize"></i> Web Apps</a></li>
-			<li><a href="./programs.html"><i class="fas fa-code"></i> Programs</a></li>
-			<li><a href="./misc-programs.html"><i class="fas fa-tools"></i> Misc Programs</a></li>
-			<li><a href="./mods.html"><i class="fas fa-cube"></i> Mods</a></li>
-			<li><a href="./repositories.html"><i class="fas fa-code-branch"></i> Repositories</a></li>
-		</ul>
-	</nav>
-    
-    <div class="container">
-        <div class="logo-container">
-            <h1 class="logo" style="text-align: center;">Pio</h1>
-            <p class="subtitle">Hobby artist, programmer<br>
-                and video game modder.</p>
-        </div>
-        
-        <div class="social-icons">
-            <a href="https://twitter.com/PioArtStuff" class="social-icon twitter" title="twitter" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-twitter" title="twitter"></i>
-            </a>
-            <a href="https://pixiv.net/users/46385589" class="social-icon pixiv" title="pixiv" target="_blank" rel="noopener noreferrer">
-                <i class="fas fab fa-pixiv"></i>
-            </a>
-            <a href="https://ko-fi.com/pioartstuff" class="social-icon kofi" title="ko-fi" target="_blank" rel="noopener noreferrer">
-            </a>
-            <a href="https://vgen.co/PioArtStuff" class="social-icon vgen" title="vgen" target="_blank" rel="noopener noreferrer">
-            </a>
-            <a href="https://pionome.bsky.social" class="social-icon bluesky" title="bluesky" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-bluesky" title="bluesky"></i>
-            </a>
-            <a href="https://github.com/pionome" class="social-icon github" title="github" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-github" title="github"></i>
-            </a>
-            <a href="https://pionome.itch.io" class="social-icon itchio" title="itch.io" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-itch-io" title="itch.io"></i>
-            </a>
-            <a href="https://www.youtube.com/c/pioziomgame" class="social-icon youtube" title="youtube" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-youtube" title="youtube"></i>
-            </a>
-        </div>
+
+    <div class="layout-wrapper">
+        <aside class="sidebar panel">
+            <div class="profile-img">
+                <img src="pfp.png" alt="Avatar" id="avatar">
+            </div>
+            <div class="name-badge">Pio</div>
+            <p id="description">Artist and programmer.</p>
+        </aside>
+
+        <main class="main-content">
+            <nav class="panel nav-panel">
+                <div class="nav-main-row">
+                    <a href="/" class="nav-btn-large"><i class="fa-solid fa-house"></i> Home</a>
+                    <a href="/art" class="nav-btn-large"><i class="fa-solid fa-paint-brush"></i> Art</a>
+                    <a href="/games" class="nav-btn-large"><i class="fa-solid fa-gamepad"></i> Games</a>
+                </div>
+
+                <hr class="dashed-line">
+
+                <div class="nav-sub-row">
+                    <a href="/web-apps" class="nav-tag-small">Web Apps</a>
+                    <a href="/programs" class="nav-tag-small">Programs</a>
+                    <a href="/misc-programs" class="nav-tag-small">Misc Programs</a>
+                    <a href="/repositories" class="nav-tag-small">Repos</a>
+                    <a href="/mods" class="nav-tag-small">Mods</a>
+                </div>
+            </nav>
+
+            <div id="link-panel" class="panel" style="background: transparent; border: none; box-shadow: none; padding: 0;">
+                <div class="link-grid">
+                    <a href="https://twitter.com/PioArtStuff" class="link-card">
+                        <div class="icon-box"><i class="fa-brands fa-twitter"></i></div>
+                        <span>Twitter</span>
+                    </a>
+                    <a href="https://pixiv.net/users/46385589" class="link-card">
+                        <div class="icon-box"><i class="fa-brands fa-pixiv"></i></div>
+                        <span>Pixiv</span>
+                    </a>
+                    <a href="https://vgen.co/PioArtStuff" class="link-card">
+                        <div class="icon-box" style="background-image: url('/assets/misc/vgen.png'); background-size: 85%; background-repeat: no-repeat; background-position: center;"></div>
+                        <span>Vgen</span>
+                    </a>
+                    <a href="https://pionome.bsky.social" class="link-card">
+                        <div class="icon-box"><i class="fa-brands fa-bluesky"></i></div>
+                        <span>Bluesky</span>
+                    </a>
+                    <a href="https://github.com/pionome" class="link-card">
+                        <div class="icon-box"><i class="fa-brands fa-github"></i></div>
+                        <span>Github</span>
+                    </a>
+                    <a href="https://pionome.itch.io" class="link-card">
+                        <div class="icon-box"><i class="fa-brands fa-itch-io"></i></div>
+                        <span>Itch.io</span>
+                    </a>
+                    <a href="https://discordapp.com/users/344828658520686592" class="link-card">
+                        <div class="icon-box"><i class="fa-brands fa-discord"></i></div>
+                        <span>Discord</span>
+                    </a>
+                    <a href="https://www.youtube.com/@pionome" class="link-card">
+                        <div class="icon-box"><i class="fa-brands fa-youtube"></i></div>
+                        <span>YouTube</span>
+                    </a>
+                    <a href="https://ko-fi.com/pioartstuff" class="link-card">
+                        <div class="icon-box" style="background-image: url('/assets/misc/kofi.png'); background-size: 85%; background-repeat: no-repeat; background-position: center;"></div>
+                        <span>Ko-Fi</span>
+                    </a>
+                </div>
+            </div>
+        </main>
     </div>
+
+    <script>
+    const avatar = document.getElementById('avatar');
+    const container = document.querySelector('.profile-img');
     
-    <script src="scripts/shared.js" defer></script>
+    const imgNormal = "/assets/pfp/main.webp";
+    const imgMidBlink = "/assets/pfp/blink1.webp";
+    const imgFullBlink = "/assets/pfp/blink2.webp";
+    const imgClicked = "/assets/pfp/click.webp";
+
+    [imgMidBlink, imgFullBlink, imgClicked].forEach(src => {
+        const i = new Image();
+        i.src = src;
+    });
+
+    let isClicked = false;
+
+    function triggerBlink() {
+        if (isClicked) return;
+        setTimeout(() => { if(!isClicked) avatar.src = imgMidBlink; }, 0);
+        setTimeout(() => { if(!isClicked) avatar.src = imgFullBlink; }, 100);
+        setTimeout(() => { if(!isClicked) avatar.src = imgFullBlink; }, 200);
+        setTimeout(() => { if(!isClicked) avatar.src = imgMidBlink; }, 300); 
+        setTimeout(() => { if(!isClicked) avatar.src = imgNormal; }, 400);
+        scheduleNextBlink();
+    }
+
+    function scheduleNextBlink() {
+        const randomDelay = Math.random() * (6000 - 3000) + 3000;
+        setTimeout(triggerBlink, randomDelay);
+    }
+
+    container.addEventListener('click', () => {
+        isClicked = true;
+        avatar.src = imgClicked;
+        container.classList.remove('is-squishing');
+        void container.offsetWidth;
+        container.classList.add('is-squishing');
+        setTimeout(() => {
+            isClicked = false;
+            avatar.src = imgNormal;
+        }, 2000);
+    });
+
+    scheduleNextBlink();
+</script>
 </body>
 </html>

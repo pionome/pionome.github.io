@@ -330,16 +330,15 @@ async function loadTMX(file) {
             scale = 1.0;
             offsetX = 0;
             offsetY = 0;
-            
             document.getElementById('textureInfo').innerHTML = `
-                <div class="section-title">
-                    <i class="fas fa-image"></i>
+				<div style="font-weight:800; margin-bottom:5px; color:var(--accent-primary);">
+                    <i class="fas fa-info-circle"></i>
                     <span>Texture Info</span>
                 </div>
-                <p>• Size: ${tmxData.pictureHeader.Width}×${tmxData.pictureHeader.Height}</p>
-                <p>• Format: ${getPixelFormatName(tmxData.pictureHeader.PixelFormat)}</p>
-                <p>• Palette: ${tmxData.palette ? getPixelFormatName(tmxData.pictureHeader.PaletteFormat) : 'None'}</p>
-                <p>• Wrap Mode: ${getWrapModeName(tmxData.pictureHeader.WrapMode)}</p>
+				<b>Size:</b> ${tmxData.pictureHeader.Width}×${tmxData.pictureHeader.Height}<br>
+				<b>Format:</b> ${getPixelFormatName(tmxData.pictureHeader.PixelFormat)}<br>
+				<b>Palette:</b> ${tmxData.palette ? getPixelFormatName(tmxData.pictureHeader.PaletteFormat) : 'None'}<br>
+				<b>Wrap Mode:</b> ${getWrapModeName(tmxData.pictureHeader.WrapMode)}
             `;
             
             drawTexture();

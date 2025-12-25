@@ -4,67 +4,376 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TMX Viewer</title>
+    <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Pio" />
+    <link rel="manifest" href="/assets/site.webmanifest" />
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Fredoka+One&display=swap" rel="stylesheet">
-	<link rel="icon" type="image/png" href="../assets/eye.png">
-    <script src="../scripts/apps/reader.js"></script>
-	<link rel="stylesheet" href="../styles/shared.css">
-	<link rel="stylesheet" href="../styles/web-apps.css">
+    <script src="/scripts/apps/reader.js"></script>
+    <style>
+        :root {
+            --bg-color: #f4f8ff;      
+            --grid-line: #dce7f7;     
+            --panel-bg: #ffffff;
+            --text-main: #5a6585;     
+            --accent-primary: #94b0ff;
+            --accent-secondary: #e0cdff;
+            --accent-tag: #eef2ff;
+            --border-width: 2px;
+            --radius-main: 1rem;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background-image: 
+                linear-gradient(var(--grid-line) 2px, transparent 2px),
+                linear-gradient(90deg, var(--grid-line) 2px, transparent 2px);
+            background-size: 60px 60px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel {
+            background: var(--panel-bg);
+            border: var(--border-width) solid var(--accent-primary);
+            border-radius: var(--radius-main);
+            box-shadow: 4px 4px 0px rgba(148, 176, 255, 0.2);
+        }
+
+        .btn-ui {
+            font-family: inherit;
+            background: white;
+            border: 2px solid var(--accent-primary);
+            color: var(--text-main);
+            padding: 10px 15px;
+            border-radius: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .btn-ui:hover:not(:disabled) {
+            transform: translate(-3px, -3px);
+            box-shadow: 4px 4px 0px var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .btn-ui:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #f5f5f5;
+            border-color: #ddd;
+        }
+
+        .navbar-toggle {
+            box-sizing: content-box;
+            border-radius: 0.75rem;
+            position: fixed;
+            font-size: 1.5rem;
+            top: 15px;
+            right: 15px;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1001;
+            background: white;
+        }
+
+        .navbar-toggle:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 4px 4px 0px var(--accent-primary);
+        }
+
+        .nav-panel {
+            transform-origin: right;
+            position: fixed;
+            top: 15px;
+            right: 100px;
+            scale: 0 100%;
+            opacity: 0;
+            visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .nav-panel.active {
+            animation: bounceIn 0.5s cubic-bezier(0.34, 1.16, 0.94, 1) forwards;
+        }
+
+        @keyframes bounceIn {
+            0% { scale: 0 100%; opacity: 0; visibility: hidden; }
+            60% { scale: 105% 100%; opacity: 1; visibility: visible; }
+            100% { scale: 100% 100%; opacity: 1; visibility: visible; }
+        }
+
+        .nav-main-row { display: flex; gap: 0.8rem; }
+
+        .nav-btn-large {
+            flex: 1;
+            text-align: center;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 1000;
+            padding: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn-large:hover {
+            transform: translate(0px, -3px);
+            box-shadow: 0px 4px 0px var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .dashed-line {
+            border: none;
+            border-top: 2px dashed var(--grid-line);
+            margin: 5px 0;
+        }
+
+        .nav-sub-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .nav-tag-small {
+            text-decoration: none;
+            color: var(--text-main);
+            background: #fff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-tag-small:hover {
+            box-shadow: 0px 4px 0px var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            padding: 15px;
+            gap: 15px;
+        }
+
+        .sidebar {
+            width: 320px;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .sidebar h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.8rem;
+            color: var(--accent-primary);
+            text-align: center;
+            border-bottom: 2px dashed var(--grid-line);
+            padding-bottom: 15px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-label {
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="file"] { display: none; }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: white;
+            border: 2px dashed var(--accent-primary);
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .file-upload-label:hover {
+            background: var(--accent-tag);
+            border-style: solid;
+        }
+
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: 2px solid var(--grid-line);
+            border-radius: 8px;
+            width: 100%;
+            height: 40px;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            padding: 10px;
+            border: 2px solid var(--grid-line);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper input {
+            accent-color: var(--accent-primary);
+            width: 18px;
+            height: 18px;
+        }
+
+        .info-box {
+            background: var(--accent-tag);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            border: 1px solid var(--grid-line);
+        }
+
+        .viewport-wrapper {
+            flex: 1;
+            position: relative;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #appDiv { width: 100%; height: 100%; cursor: grab; }
+        #appDiv:active { cursor: grabbing; }
+
+        .zoom-overlay {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.8);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            border: 2px solid var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        @media (max-width: 900px) {
+            .app-container { flex-direction: column; overflow: auto; }
+            .sidebar { width: 100%; min-width: 0; }
+            .viewport-wrapper { height: 60vh; }
+        }
+    </style>
 </head>
 <body>
-    <nav>
-        <ul class="nav-links">
-            <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="../art.html"><i class="fas fa-paint-brush"></i> Art</a></li>
-            <li><a href="../games.html"><i class="fas fa-gamepad"></i> Games</a></li>
-            <li><a href="../web-apps.html"><i class="fas fa-window-maximize"></i> Web Apps</a></li>
-            <li><a href="../programs.html"><i class="fas fa-code"></i> Programs</a></li>
-            <li><a href="../misc-programs.html"><i class="fas fa-tools"></i> Misc Programs</a></li>
-            <li><a href="../mods.html"><i class="fas fa-cube"></i> Mods</a></li>
-            <li><a href="../repositories.html"><i class="fas fa-code-branch"></i> Repositories</a></li>
-        </ul>
+
+    <div class="panel navbar-toggle" id="navbarToggle">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+
+    <nav class="panel nav-panel" id="navbarPanel">
+        <div class="nav-main-row">
+            <a href="/" class="nav-btn-large"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="/art" class="nav-btn-large"><i class="fa-solid fa-paint-brush"></i> Art</a>
+            <a href="/games" class="nav-btn-large"><i class="fa-solid fa-gamepad"></i> Games</a>
+        </div>
+        <hr class="dashed-line">
+        <div class="nav-sub-row">
+            <a href="/web-apps" class="nav-tag-small" style="color:var(--accent-primary);">Web Apps</a>
+            <a href="/programs" class="nav-tag-small">Programs</a>
+            <a href="/misc-programs" class="nav-tag-small">Misc Programs</a>
+            <a href="/repositories" class="nav-tag-small">Repos</a>
+            <a href="/mods" class="nav-tag-small">Mods</a>
+        </div>
     </nav>
-    <main>
-        <div id="side">
+
+    <div class="app-container">
+        <aside class="panel sidebar">
             <h1>TMX Viewer</h1>
-            <label>
-                Select a TMX texture to open
+            <div class="control-group">
+                <span class="control-label"><i class="fas fa-image"></i> Texture</span>
+                <label for="textureSelect" class="file-upload-label">
+                    <i class="fas fa-upload"></i> Load .TMX
+                </label>
                 <input id="textureSelect" type="file" accept=".tmx">
-            </label>
-            <label>
-                Background Color
-                <input id="BGcolorSelect" type="color" value="#f5f9ff">
-            </label>
-			<label class="checkbox-container">
-				<input type="checkbox" id="filteringChk" checked>
-				<label for="filteringChk">Texture Filtering</label>
-			</label>
-            <button id="saveBtn"><i class="fas fa-download"></i> Save as PNG</button>
-            <div id="textureInfo">
-                <div class="section-title">
-                    <i class="fas fa-image"></i>
-                    <span>Texture Info</span>
-                </div>
-                <p>No texture loaded</p>
             </div>
-            <div id="controls">
-                <div class="section-title">
-                    <i class="fas fa-info-circle"></i>
-                    <span>Controls</span>
-                </div>
-                <p>• Left Drag: Pan texture</p>
-                <p>• Scroll: Zoom in/out</p>
-                <p>• Double Click: Reset view</p>
+            <div class="control-group">
+                <label class="control-label"><i class="fas fa-fill-drip"></i> Background</label>
+                <input id="BGcolorSelect" type="color" value="#ffffff">
             </div>
-        </div>
-        <div id="appDiv">
-            <canvas id="textureCanvas"></canvas>
-            <div id="zoomInfo">Zoom: 100%</div>
-        </div>
-    </main>
-    <script src="../scripts/shared.js"></script>
-    <script src="../scripts/apps/tmxViewer.js"></script>
+            <div class="control-group">
+                <label class="checkbox-wrapper" for="filteringChk">
+                    <input type="checkbox" id="filteringChk" checked>
+                    <span>Texture Filtering</span>
+                </label>
+            </div>
+            <button id="saveBtn" class="btn-ui"><i class="fas fa-download"></i> Save PNG</button>
+            <div id="textureInfo" class="info-box">
+                <div style="font-weight:800; margin-bottom:5px; color:var(--accent-primary);">
+                    <i class="fas fa-info-circle"></i> Texture Info
+                </div>
+                <p id="infoText">No texture loaded</p>
+            </div>
+            <div class="info-box">
+                <div style="font-weight:800; margin-bottom:5px; color:var(--accent-primary);">
+                    <i class="fas fa-mouse"></i> Controls
+                </div>
+                <p>• <b>Drag:</b> Pan</p>
+                <p>• <b>Scroll:</b> Zoom</p>
+                <p>• <b>Dbl Click:</b> Reset</p>
+            </div>
+        </aside>
+
+        <main class="panel viewport-wrapper">
+            <div id="appDiv">
+                <canvas id="textureCanvas"></canvas>
+            </div>
+            <div id="zoomInfo" class="zoom-overlay">Zoom: 100%</div>
+        </main>
+    </div>
+
+    <script src="/scripts/apps/tmxViewer.js"></script>
+	<script src="/scripts/shared.js"></script>
 </body>
 </html>

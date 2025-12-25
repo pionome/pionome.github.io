@@ -3,503 +3,489 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gradient Texture Generator</title>
+    <title>Gradient Generator</title>
+    <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
+	<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+	<link rel="shortcut icon" href="/assets/favicon.ico" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+	<meta name="apple-mobile-web-app-title" content="Pio" />
+	<link rel="manifest" href="/assets/site.webmanifest" />
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Fredoka+One&display=swap" rel="stylesheet">
-	<link rel="icon" type="image/png" href="../assets/eye.png">
-	<link rel="stylesheet" href="../styles/shared.css">
-    <link rel="stylesheet" href="../styles/web-apps.css">
+    
     <style>
         :root {
-            --border-radius: 16px;
+            --bg-color: #f4f8ff;      
+            --grid-line: #dce7f7;     
+            --panel-bg: #ffffff;
+            --text-main: #5a6585;     
+            --accent-primary: #94b0ff;
+            --accent-secondary: #e0cdff;
+            --accent-tag: #eef2ff;
+            --warning-color: #ff6b9d;
+            --border-width: 2px;
+            --radius-main: 1rem;
         }
 
-        h2 {
-            font-family: 'Fredoka One', cursive;
-            text-align: center;
-            color: var(--primary-color);
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 2rem;
-        }
-        
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .controls {
-            flex: 1;
-            min-width: 300px;
-            background: white;
-            padding: 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            background: rgba(250, 250, 252, 0.95);
-            border: 2px solid rgba(230, 230, 240, 0.8);
-            animation: slideUpFadeIn 0.6s ease-out both;
-        }
-        
-        .preview {
-            flex: 2;
-            min-width: 400px;
-            background: white;
-            padding: 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background-image: 
+                linear-gradient(var(--grid-line) 2px, transparent 2px),
+                linear-gradient(90deg, var(--grid-line) 2px, transparent 2px);
+            background-size: 60px 60px;
             display: flex;
             flex-direction: column;
-            background: rgba(250, 250, 252, 0.95);
-            border: 2px solid rgba(230, 230, 240, 0.8);
-            animation: slideUpFadeIn 0.6s ease-out both;
         }
-        
-        .strips-panel {
-            flex: 1;
-            min-width: 300px;
-            background: white;
-            padding: 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            background: rgba(250, 250, 252, 0.95);
-            border: 2px solid rgba(230, 230, 240, 0.8);
-            display: flex;
-            flex-direction: column;
-            animation: slideUpFadeIn 0.6s ease-out both;
+
+        .panel {
+            background: var(--panel-bg);
+            border: var(--border-width) solid var(--accent-primary);
+            border-radius: var(--radius-main);
+            box-shadow: 4px 4px 0px rgba(148, 176, 255, 0.2);
         }
-        
-        .control-group {
-            margin-bottom: 25px;
-        }
-        
-        .control-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark-color);
-        }
-        
-        input[type="number"], select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #e2e8f0;
-            border-radius: var(--border-radius);
-            box-sizing: border-box;
+
+        .btn-ui {
             font-family: inherit;
-            font-size: 14px;
-            transition: var(--transition);
-            border: 2px solid #d6e6ff;
-        }
-        
-        input[type="number"]:focus, select:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.2);
-        }
-        
-        button {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 12px 18px;
-            border-radius: var(--border-radius);
+            background: white;
+            border: 2px solid var(--accent-primary);
+            color: var(--text-main);
+            padding: 10px 15px;
+            border-radius: 0.75rem;
+            font-weight: 800;
             cursor: pointer;
-            font-size: 15px;
-            font-weight: 500;
-            transition: var(--transition);
+            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            box-shadow: 0 4px 6px var(--shadow-color);
+            width: 100%;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .btn-ui:hover:not(:disabled), .btn-ui.active {
+            transform: translate(-3px, -3px);
+            box-shadow: 4px 4px 0px var(--accent-primary);
+            color: var(--accent-primary);
+        }
+        .btn-ui.active {
+            background: var(--accent-tag);
         }
         
-        button:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px var(--shadow-color);
+        .btn-ui-small {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            width: auto;
+            border-radius: 0.5rem;
+        }
+
+        .btn-danger {
+            border-color: var(--warning-color);
+            color: var(--warning-color);
+        }
+        .btn-danger:hover {
+            box-shadow: 4px 4px 0px var(--warning-color);
+            color: var(--warning-color);
+        }
+
+        .navbar-toggle {
+            box-sizing: content-box;
+            border-radius: 0.75rem;
+            position: fixed;
+			font-size: 1.5rem;
+			top: 15px;
+			right: 15px;
+            width: 45px;
+			height: 45px;
+			display: flex;
+            justify-content: center;
+			align-items: center;
+			cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 3000;
+			background: white;
+			box-shadow: unset;
+        }
+        .navbar-toggle:hover { transform: translate(-3px, -3px); box-shadow: 4px 4px 0px var(--accent-primary); }
+
+        .nav-panel {
+            transform-origin: right;
+            position: fixed; top: 15px; right: 80px;
+            scale: 0 100%; opacity: 0; visibility: hidden;
+            display: flex; flex-direction: column; gap: 0.4rem;
+            padding: 20px; z-index: 2999;
         }
         
-        button:active {
-            transform: translateY(0);
+        .nav-main-row { display: flex; gap: 0.8rem; }
+        .nav-btn-large {
+            flex: 1; text-align: center; color: var(--text-main);
+            text-decoration: none; font-size: 1.2rem; font-weight: 1000;
+            padding: 5px; transition: all 0.2s ease;
         }
+        .nav-btn-large:hover { transform: translate(0px, -3px); box-shadow: 0px 4px 0px var(--accent-primary); color: var(--accent-primary); }
+
+        .dashed-line { border: none; border-top: 2px dashed var(--grid-line); margin: 5px 0; }
+
+        .nav-sub-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .nav-tag-small {
+            text-decoration: none; color: var(--text-main); background: #fff;
+            font-size: 0.9rem; font-weight: 700; padding: 6px 14px; transition: all 0.2s ease;
+        }
+        .nav-tag-small:hover { box-shadow: 0px 4px 0px var(--accent-primary); color: var(--accent-primary); }
+        .nav-panel.active { animation: bounceIn 0.5s cubic-bezier(0.34, 1.16, 0.94, 1) forwards; }
         
-        .strip-container {
-            margin: 20px 0;
-            flex-grow: 1;
+        @keyframes bounceIn {
+            0% { scale: 0 100%; opacity: 0; visibility: hidden; }
+            60% { scale: 105% 100%; opacity: 1; visibility: visible; }
+            100% { scale: 100% 100%; opacity: 1; visibility: visible; }
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            padding: 15px;
+            gap: 15px;
+        }
+
+        .sidebar {
+            width: 360px;
+            min-width: 360px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             overflow-y: auto;
+            padding: 20px;
         }
-        
+
+        .sidebar h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.8rem;
+            color: var(--accent-primary);
+            text-align: center;
+            border-bottom: 2px dashed var(--grid-line);
+            padding-bottom: 15px;
+        }
+
+        .section-header {
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            margin-top: 5px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+        .control-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--grid-line);
+            border-radius: 8px;
+            font-family: inherit;
+            font-weight: 700;
+            color: var(--text-main);
+            outline: none;
+        }
+        input[type="number"]:focus { border-color: var(--accent-primary); }
+
+        .strip-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-bottom: 20px;
+        }
+
         .strip {
             background: white;
-            padding: 18px;
-            margin-bottom: 20px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
-            transition: var(--transition);
-            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--grid-line);
+            border-radius: 12px;
+            padding: 12px;
+            transition: 0.2s;
         }
-        
-        .strip:hover {
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border-color: #cbd5e1;
-        }
-        
+        .strip:hover { border-color: var(--accent-secondary); box-shadow: 0 2px 8px rgba(148,176,255,0.1); }
+
         .strip-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .strip-title {
-            font-weight: 600;
-            color: var(--primary-color);
-            font-size: 1.1rem;
+            margin-bottom: 12px;
+            font-weight: 800;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            border-bottom: 1px dashed var(--grid-line);
+            padding-bottom: 8px;
         }
 
         .gradient-stop {
             display: flex;
             align-items: center;
-            margin-bottom: 12px;
-            gap: 8px;
-            width: 100%;
-        }
-
-        .gradient-stop .color-input-container {
-            position: relative;
-            width: 30px;
-            min-width: 30px;
-            height: 30px;
-        }
-
-        .gradient-stop input[type="range"] {
-            flex-grow: 1;
-            min-width: 0;
-            height: 8px;
-            border-radius: 4px;
-            background: #e2e8f0;
-            appearance: none;
-            -webkit-appearance: none;
-        }
-
-        .position-value {
-            min-width: 40px;
-            width: 40px;
-            text-align: center;
-            font-size: 14px;
-            color: var(--dark-color);
-        }
-
-        .remove-stop {
-            background-color: transparent;
-            color: var(--warning-color);
-            padding: 5px;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            min-width: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #f8d7da;
-            flex-shrink: 0;
-        }
-        
-        .gradient-stops {
-            margin: 15px 0;
-        }
-        
-        .gradient-stop .color-preview {
-            width: 100%;
-            height: 100%;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .gradient-stop .color-preview:hover {
-            border-color: #cbd5e1;
-        }
-        
-        .gradient-stop input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: var(--accent-color);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .gradient-stop input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-            background: var(--primary-color);
-        }
-
-        .remove-strip {
-            width: 45%;
-            padding: 8px 12px;
-            font-size: 14px;
-        }
-
-        .position-value {
-            min-width: 40px;
-            text-align: center;
-            font-size: 14px;
-            color: var(--dark-color);
-        }
-        
-        #texturePreview {
-            width: 100%;
-            border: 1px solid #e2e8f0;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-        
-        #texturePreview:hover {
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-        }
-        
-        .preview-container {
-            width: 100%;
-            overflow: hidden;
-            margin-bottom: 20px;
-            border-radius: var(--border-radius);
-        }
-        
-        .direction-toggle {
-            display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 8px;
+            background: var(--accent-tag);
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid transparent;
         }
-        
-        .direction-toggle button {
+        .gradient-stop:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .color-preview {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: transform 0.1s;
+        }
+        .color-preview:hover { transform: scale(1.1); }
+
+        input[type="range"] {
             flex: 1;
-            background-color: #e2e8f0;
-            color: var(--dark-color);
+            accent-color: var(--accent-primary);
+            height: 6px;
+            cursor: pointer;
+            margin: 0;
+            max-width: 100px;
         }
-        
-        .direction-toggle button.active {
-            background-color: var(--accent-color);
-            color: white;
+
+        .position-value {
+            font-size: 0.75rem;
+            font-weight: 800;
+            min-width: 38px;
+            text-align: right;
+            font-feature-settings: "tnum";
         }
-        
-        .remove-stop {
-            background-color: transparent;
+
+        .remove-stop-btn {
+            background: white; 
+            border: 1px solid var(--warning-color);
             color: var(--warning-color);
-            padding: 5px;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            border-radius: 6px;
+            width: 24px; height: 24px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+        .remove-stop-btn:hover { background: var(--warning-color); color: white; }
+
+        .viewport-wrapper {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(circle, #ffffff 0%, #f0f4f8 100%);
             display: flex;
-            align-items: center;
             justify-content: center;
-            border: 1px solid #f8d7da;
+            align-items: center;
+            overflow: hidden;
+            padding: 40px;
         }
         
-        .remove-stop:hover {
-            background-color: #f8d7da;
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 2px solid var(--grid-line);
+            border-radius: 8px;
         }
-        
+
         .color-picker-modal {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(90, 101, 133, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 5000;
+            justify-content: center; align-items: center;
         }
         
         .color-picker-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            width: 300px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }
-        
-        .color-picker-header {
+            background: white;
+            padding: 25px;
+            border: 3px solid var(--accent-primary);
+            border-radius: 1.5rem;
+            width: 340px;
+            box-shadow: 0 20px 40px rgba(90, 101, 133, 0.2);
+            animation: bounceIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+            flex-direction: column;
+            gap: 15px;
         }
-        
-        .color-picker-title {
-            font-weight: 600;
-            color: var(--dark-color);
+
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 800; font-size: 1.1rem; color: var(--text-main);
         }
-        
-        .color-picker-close {
-            width: unset;
+
+        .color-swatch-wrapper {
+            position: relative;
+            width: 100%;
+            height: 60px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--grid-line);
+        }
+        input[type="color"].big-picker {
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            padding: 0; margin: 0;
             border: none;
-            font-size: 20px;
             cursor: pointer;
         }
+
+        .color-inputs-row { display: flex; gap: 10px; }
         
-        .color-picker-main {
-            margin-bottom: 15px;
-        }
-        
-        .color-picker-inputs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .color-picker-inputs input {
+        .input-labeled {
             flex: 1;
-            padding: 8px;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            width: 50%;
-            border: 2px solid #d6e6ff;
+            display: flex; flex-direction: column; gap: 4px;
         }
-        
-        .color-picker-actions {
-            display: flex;
-            gap: 10px;
+        .input-labeled label { font-size: 0.75rem; font-weight: 700; color: #888; }
+        .input-labeled input { 
+            width: 100%; padding: 8px; 
+            border: 2px solid var(--grid-line); 
+            border-radius: 8px; 
+            font-family: inherit; font-weight: 700; color: var(--text-main);
         }
-        
-        .color-picker-actions button {
-            flex: 1;
-        }
-        
-        .strips-panel h3, .controls h3 {
-            font-family: 'Fredoka One', cursive;
-            text-align: center;
-            color: var(--primary-color);
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            
-            .controls, .preview, .strips-panel {
-                min-width: 100%;
-            }
-            
-            .nav-links {
-                gap: 0.5rem;
-            }
-            
-            .nav-links a {
-                padding: 0.5rem 0.8rem;
-                font-size: 0.9rem;
-            }
+        .input-labeled input:focus { border-color: var(--accent-primary); outline: none; }
+
+        @media (max-width: 900px) {
+            .app-container { flex-direction: column; overflow: auto; height: auto; }
+            .sidebar { width: 100%; min-width: 0; max-height: none; }
+            .viewport-wrapper { height: 50vh; padding: 20px; }
         }
     </style>
 </head>
 <body>
-    <nav>
-        <ul class="nav-links">
-            <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="../art.html"><i class="fas fa-paint-brush"></i> Art</a></li>
-            <li><a href="../games.html"><i class="fas fa-gamepad"></i> Games</a></li>
-            <li><a href="../web-apps.html"><i class="fas fa-window-maximize"></i> Web Apps</a></li>
-            <li><a href="../programs.html"><i class="fas fa-code"></i> Programs</a></li>
-            <li><a href="../misc-programs.html"><i class="fas fa-tools"></i> Misc Programs</a></li>
-            <li><a href="../mods.html"><i class="fas fa-cube"></i> Mods</a></li>
-            <li><a href="../repositories.html"><i class="fas fa-code-branch"></i> Repositories</a></li>
-        </ul>
+
+    <div class="panel navbar-toggle" id="navbarToggle">
+        <i class="fa-solid fa-bars" ></i>
+    </div>
+
+    <nav class="panel nav-panel" id="navbarPanel">
+        <div class="nav-main-row">
+            <a href="/" class="nav-btn-large"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="/art.html" class="nav-btn-large"><i class="fa-solid fa-paint-brush"></i> Art</a>
+            <a href="/games.html" class="nav-btn-large"><i class="fa-solid fa-gamepad"></i> Games</a>
+        </div>
+        <hr class="dashed-line">
+        <div class="nav-sub-row">
+            <a href="/web-apps" class="nav-tag-small" style="color:var(--accent-primary);">Web Apps</a>
+            <a href="/programs.html" class="nav-tag-small">Programs</a>
+            <a href="/misc-programs.html" class="nav-tag-small">Misc Programs</a>
+            <a href="/repositories.html" class="nav-tag-small">Repos</a>
+            <a href="/mods.html" class="nav-tag-small">Mods</a>
+        </div>
     </nav>
 
-    <div class="container">
-        <div class="controls">
-            <h3>Texture</h3>
-            <div class="control-group">
-                <label for="width">Texture Width (px)</label>
-                <input type="number" id="width" min="10" max="4096" value="512">
-            </div>
+    <div class="app-container">
+        <aside class="panel sidebar">
+            <h1>Gradient Gen</h1>
+            
+            <div class="section-header"><i class="fas fa-cog"></i> Settings</div>
             
             <div class="control-group">
-                <label for="height">Texture Height (px)</label>
-                <input type="number" id="height" min="10" max="4096" value="512">
-            </div>
-            
-            <div class="control-group">
-                <label>Strip Direction</label>
-                <div class="direction-toggle">
-                    <button id="horizontalBtn" class="active">
-                        <i class="fas fa-arrows-alt-h"></i> Horizontal
-                    </button>
-                    <button id="verticalBtn">
-                        <i class="fas fa-arrows-alt-v"></i> Vertical
-                    </button>
+                <div class="control-row">
+                    <div class="input-labeled">
+                        <label>Width</label>
+                        <input type="number" id="width" min="10" max="4096" value="512">
+                    </div>
+                    <div class="input-labeled">
+                        <label>Height</label>
+                        <input type="number" id="height" min="10" max="4096" value="512">
+                    </div>
                 </div>
             </div>
-            
-            <button class="download-btn" id="downloadBtn">
-                <i class="fas fa-download"></i> Download Texture
-            </button>
-            
-            <div class="control-group" style="margin-top: 20px;">
-                <label>Quick Actions</label>
-                <div style="display: flex; gap: 10px;">
-                    <button id="randomizeBtn" style="flex: 1;">
-                        <i class="fas fa-random"></i> Randomize
-                    </button>
-                    <button id="resetBtn" style="flex: 1;">
-                        <i class="fas fa-undo"></i> Reset
-                    </button>
+
+            <div class="control-group">
+                <div class="control-row">
+                    <button id="horizontalBtn" class="btn-ui active"><i class="fas fa-arrows-alt-h"></i> Horizontal</button>
+                    <button id="verticalBtn" class="btn-ui"><i class="fas fa-arrows-alt-v"></i> Vertical</button>
                 </div>
             </div>
-        </div>
-        
-        <div class="preview">
-            <h2>Gradient Texture Generator</h2>
-            <div class="preview-container">
-                <canvas id="texturePreview"></canvas>
+
+            <div class="control-group">
+                <div class="control-row">
+                    <button id="randomizeBtn" class="btn-ui"><i class="fas fa-random"></i> Random</button>
+                    <button id="resetBtn" class="btn-ui"><i class="fas fa-undo"></i> Reset</button>
+                </div>
             </div>
-        </div>
-        
-        <div class="strips-panel">
-            <h3>Gradient Strips</h3>
-            <div class="strip-container" id="stripContainer"></div>
-            <button class="add-strip" id="addStrip">
-                <i class="fas fa-plus"></i> Add Gradient Strip
-            </button>
-        </div>
+
+            <hr class="dashed-line" style="margin: 10px 0;">
+            
+            <div class="section-header">
+                <i class="fas fa-layer-group"></i> Strips
+                <button id="addStrip" class="btn-ui btn-ui-small" style="margin-left:auto;">
+                    <i class="fas fa-plus"></i> Add
+                </button>
+            </div>
+
+            <div id="stripContainer" class="strip-container">
+                </div>
+
+            <div style="margin-top:auto;">
+                <button id="downloadBtn" class="btn-ui" style="background:var(--accent-primary); color:white; border:none; padding: 15px;">
+                    <i class="fas fa-download"></i> Download Texture
+                </button>
+            </div>
+        </aside>
+
+        <main class="panel viewport-wrapper">
+            <canvas id="texturePreview"></canvas>
+        </main>
     </div>
-    
+
     <div class="color-picker-modal" id="colorPickerModal">
         <div class="color-picker-content">
-            <div class="color-picker-header">
-                <div class="color-picker-title">Select Color</div>
-                <button class="color-picker-close" id="colorPickerClose">&times;</button>
+            <div class="modal-header">
+                <span>Select Color</span>
+                <button id="colorPickerClose" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-main);">&times;</button>
             </div>
-            <div class="color-picker-main">
-                <input type="color" id="colorPickerInput" style="width: 100%; height: 50px;">
+            
+            <div class="color-swatch-wrapper">
+                <input type="color" id="colorPickerInput" class="big-picker">
             </div>
-            <div class="color-picker-inputs">
-                <input type="text" id="colorHexInput" placeholder="Hex (#RRGGBB)">
-                <input type="text" id="colorRgbInput" placeholder="RGB (r,g,b)">
+            
+            <div class="color-inputs-row">
+                <div class="input-labeled">
+                    <label>Hex</label>
+                    <input type="text" id="colorHexInput" placeholder="#RRGGBB">
+                </div>
+                <div class="input-labeled">
+                    <label>RGB</label>
+                    <input type="text" id="colorRgbInput" placeholder="255, 255, 255">
+                </div>
             </div>
-            <div class="color-picker-actions">
-                <button id="colorPickerCancel">Cancel</button>
-                <button id="colorPickerApply">Apply</button>
+            
+            <div class="control-row" style="margin-top:10px;">
+                <button id="colorPickerCancel" class="btn-ui">Cancel</button>
+                <button id="colorPickerApply" class="btn-ui" style="background:var(--accent-primary); color:white; border:none;">Apply</button>
             </div>
         </div>
     </div>
-    
-    <script src="../scripts/shared.js"></script>
-    <script src="../scripts/apps/gradientTextureGenerator.js"></script>
+	
+    <script src="/scripts/apps/gradientTextureGenerator.js"></script>
+    <script src="/scripts/shared.js"></script>
 </body>
 </html>
